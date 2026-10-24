@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.1 · 仙途之初</title>
+<title>青元修真 · 测试版 v-0.2.2 · 道友须知</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -782,6 +782,12 @@ footer{color:#5E7592;letter-spacing:1px}
 .lite .hero-status i{animation:none}
 .lite .gf-prism{animation:none}
 #updBar{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:9999;display:flex;gap:10px;align-items:center;padding:9px 16px;border-radius:999px;background:linear-gradient(120deg,rgba(232,201,127,.97),rgba(198,161,88,.97));color:#101820;font:13px/1.2 "Microsoft YaHei",system-ui,-apple-system,sans-serif;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.45);cursor:pointer;user-select:none}#updBar span{font-weight:400;opacity:.72}#updBar:hover{filter:brightness(1.06)}
+.fr-dot{display:none}.tab-btn.alert{box-shadow:inset 0 0 0 2px rgba(255,150,60,.85);border-color:rgba(255,150,60,.9);color:#ffb86b}.tab-btn.alert .fr-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff963c;margin-left:6px;vertical-align:6px}.fr-card{border:1px solid rgba(111,231,255,.14);border-radius:12px;padding:12px 14px;background:rgba(12,22,36,.62);margin-bottom:12px}.fr-k{font-size:11px;letter-spacing:2px;color:#7fe3c4}.fr-t{font-size:15px;font-weight:700;margin:3px 0 9px}.fr-uid{font:700 22px/1.25 ui-monospace,Consolas,monospace;color:#e8c97f;letter-spacing:2px}.fr-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.fr-in{flex:1 1 240px;min-width:0;background:rgba(8,14,24,.92);border:1px solid rgba(111,231,255,.2);border-radius:9px;color:#e6edf7;padding:9px 11px;font:13px/1.35 "Microsoft YaHei",system-ui,sans-serif}.fr-item{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 12px;border-radius:10px;background:rgba(10,18,30,.62);border:1px solid rgba(111,231,255,.1);margin-top:8px}.fr-rank{font:700 15px/1 "Microsoft YaHei",system-ui;color:#8fa3bd;text-align:center}.fr-rank.top{color:#e8c97f}.fr-nm{font-weight:700;font-size:14px}.fr-dim{color:#8fa3bd;font-size:12px;margin-top:2px}.fr-bar{height:6px;border-radius:3px;background:rgba(111,231,255,.12);overflow:hidden;margin-top:6px}.fr-bar i{display:block;height:100%;background:linear-gradient(90deg,#7fe3c4,#e8c97f)}.fr-empty{color:#8fa3bd;font-size:13px;padding:8px 0}.fr-note{margin-top:10px;padding:9px 12px;border-left:2px solid rgba(127,227,196,.45);background:rgba(127,227,196,.05);border-radius:0 8px 8px 0}
+.fr-note-h{font-size:12px;letter-spacing:.4px;color:#9ff0d8;margin-bottom:4px}
+.fr-note-l{margin:0;padding-left:18px;font-size:13px;line-height:1.65;color:#b9c6d6}
+.fr-note-l li{margin:2px 0}
+.fr-note-l b{color:#e8c97f;font-weight:600}
+.fr-badge{font-size:11px;padding:2px 7px;border-radius:999px;background:rgba(232,201,127,.16);color:#e8c97f;border:1px solid rgba(232,201,127,.35)}.fr-me{box-shadow:inset 0 0 0 1px rgba(232,201,127,.45)}.fr-seg{display:flex;gap:8px;margin-bottom:10px}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#070d18">
@@ -802,7 +808,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.1 — 仙途之初</div>
+      <div class="sub">测试版 v-0.2.2 — 道友须知</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -983,6 +989,7 @@ footer{color:#5E7592;letter-spacing:1px}
         <button class="btn tab-btn" data-tab="Trade" onclick="switchTab('Trade')">商业</button>
         <button class="btn tab-btn" data-tab="Log" onclick="switchTab('Log')">日志</button>
         <button class="btn tab-btn" data-tab="Story" onclick="switchTab('Story')">剧情</button>
+        <button class="btn tab-btn" data-tab="Friend" id="tabBtnFriend" onclick="switchTab('Friend')">好友<span class="fr-dot"></span></button>
         <button class="btn tab-btn" data-tab="Ach" onclick="switchTab('Ach')">成就</button>
       </div>
       <div class="tab" id="tabChar"></div>
@@ -1013,6 +1020,7 @@ footer{color:#5E7592;letter-spacing:1px}
         <div class="subpane" id="tabRecycle"></div>
       </div>
       <div class="tab" id="tabStory"></div>
+      <div class="tab" id="tabFriend"></div>
       <div class="tab" id="tabLog">
         <div class="stat-line" id="statSum"></div>
         <div id="logBody"></div>
@@ -1520,6 +1528,7 @@ function fresh(){
   story:{page:0,done:false},
   stats:{breaks:0,fails:0,fei:0,time:0,events:0,kills:0,battleWins:0,noHit:0,danBought:0,maxHit:0,maxKill:0},
   art:{},fabao:{},fabaoSlot:[null,null,null,null,null],xdan:{n:0,sum:0},ach:{},unstableUntil:0,restUntil:0,hot:null,nail:{need:0,hits:0,until:0},plane:{idx:0},planeDif:0,bossClear:{},
+  uid:'',friends:[],friendReq:[],friendOut:[],
   last:Date.now(),heartUntil:0,rainUntil:0,enlightUntil:0,wudaoUntil:0,worldUntil:0};
 }
 
@@ -2630,8 +2639,266 @@ function switchTab(name){
  if(name==='Wuji'&&typeof renderWuji==='function')renderWuji();
  if(name==='Recycle')renderRecycle();
  if(name==='Ach'&&typeof renderAch==='function')renderAch();
+ if(name==='Friend'&&typeof renderFriend==='function')renderFriend();
  if(name==='Battle'&&typeof renderBattleTab==='function')renderBattleTab();
 }
+
+
+/* ================= 好友模块（本地模式） ================= */
+const FR_BUILD='0.2.2';
+const UID_KEY='qingyundao_uid';
+/* 道号绑定在本机，不随存档走：导出/导入/改档都改不到它 */
+function devUid(){
+ let u='';
+ try{u=localStorage.getItem(UID_KEY)||'';}catch(e){}
+ if(!/^1\d{11}$/.test(u)){
+  u=genUid();
+  try{localStorage.setItem(UID_KEY,u);}catch(e){}
+ }
+ return u;
+}
+function lockUid(){ if(S) S.uid=devUid(); }
+function genUid(){
+ let s='1';
+ for(let i=0;i<11;i++)s+=String(Math.floor(Math.random()*10));
+ return s;
+}
+function ensureFriend(){
+ if(!S)return;
+ if(!Array.isArray(S.friends))S.friends=[];
+ if(!Array.isArray(S.friendReq))S.friendReq=[];
+ if(!Array.isArray(S.friendOut))S.friendOut=[];
+ S.uid=devUid();
+}
+function frEnc(o){
+ const bytes=new TextEncoder().encode(JSON.stringify(o));
+ let bin='';for(const b of bytes)bin+=String.fromCharCode(b);
+ return 'QY-'+btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function frDec(txt){
+ try{
+  let s=String(txt||'').trim().replace(/\s+/g,'');
+  if(!s)return null;
+  if(s.startsWith('QY-'))s=s.slice(3);
+  s=s.replace(/-/g,'+').replace(/_/g,'/');
+  while(s.length%4)s+='=';
+  const bin=atob(s);
+  const arr=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+  const o=JSON.parse(new TextDecoder().decode(arr));
+  if(!o||typeof o.u!=='string'||!/^1\d{11}$/.test(o.u))return null;
+  return o;
+ }catch(e){return null;}
+}
+function frSnapshot(){
+ return {u:S.uid,n:(S.name||'无名道友'),r:S.realm|0,s:S.sub|0,p:(S.plane&&S.plane.idx)|0,t:Date.now(),b:FR_BUILD};
+}
+function frMyCode(){ensureFriend();return frEnc(frSnapshot());}
+function frCopy(txt,msg){
+ const ok=()=>logAdd('✦ '+(msg||'已复制到剪贴板。'));
+ if(navigator.clipboard&&navigator.clipboard.writeText){
+  navigator.clipboard.writeText(txt).then(ok).catch(()=>frCopyFallback(txt,msg));
+ }else frCopyFallback(txt,msg);
+}
+function frCopyFallback(txt,msg){
+ const ta=document.createElement('textarea');
+ ta.value=txt;ta.style.position='fixed';ta.style.left='-9999px';ta.style.top='0';
+ document.body.appendChild(ta);ta.focus();ta.select();
+ let done=false;
+ try{done=document.execCommand('copy');}catch(e){}
+ ta.remove();
+ if(done)logAdd('✦ '+(msg||'已复制到剪贴板。'));
+ else prompt('自动复制不可用，请手动复制下面的内容：',txt);
+}
+function frRealmText(r,s){
+ try{return realmText(r,s);}catch(e){return (REALMS&&REALMS[r]?REALMS[r].name:'?')+'期';}
+}
+function frPlaneText(i){
+ try{return planeLabel(i);}catch(e){return '第 '+(i|0)+' 级';}
+}
+function frRealmScore(o){return (o.r|0)*9+(o.s|0);}
+function frMe(){return {u:S.uid,n:(S.name||'无名道友'),r:S.realm|0,s:S.sub|0,p:(S.plane&&S.plane.idx)|0,t:Date.now(),me:1};}
+function frAddByCode(){
+ const box=document.getElementById('frInput');
+ const raw=box?box.value:'';
+ const o=frDec(raw);
+ if(!o){logAdd('✕ 好友码无效，请让对方重新复制一整个码（以 QY- 开头）。');return;}
+ if(o.u===S.uid){logAdd('✕ 这是你自己的道号。');return;}
+ if(o.q){ // 对方发来的是「申请码」
+  if(S.friends.some(f=>f.u===o.u)){logAdd('✦ 该道友已在你的好友列表中。');return;}
+  if(S.friendReq.some(f=>f.u===o.u)){logAdd('✦ 这条申请已经在列表里了。');return;}
+  S.friendReq.push({u:o.u,n:o.n||'无名道友',r:o.r|0,s:o.s|0,p:o.p|0,t:Date.now()});
+  logAdd('✦ 收到来自「'+(o.n||'无名道友')+'」的好友申请，请在好友页处理。');
+ }else{
+  if(S.friends.some(f=>f.u===o.u)){
+   const f=S.friends.find(x=>x.u===o.u);
+   f.n=o.n||f.n;f.r=o.r|0;f.s=o.s|0;f.p=o.p|0;f.t=Date.now();
+   logAdd('✦ 已更新好友「'+f.n+'」的战绩。');
+  }else{
+   S.friends.push({u:o.u,n:o.n||'无名道友',r:o.r|0,s:o.s|0,p:o.p|0,t:Date.now()});
+   logAdd('✦ 已将「'+(o.n||'无名道友')+'」加入好友，可与其比拼境界与位面。');
+  }
+ }
+ if(box)box.value='';
+ try{save();}catch(e){}
+ renderFriend();
+}
+function frApplyCode(){
+ ensureFriend();
+ const c=frEnc(Object.assign(frSnapshot(),{q:1}));
+ frCopy(c,'申请码已复制，发给对方粘贴即可出现在他的申请列表。');
+}
+function frDemoReq(){
+ ensureFriend();
+ const fake=[];const pool=['云间客','晚照','无咎','半夏','一叶舟'];
+ const n=pool[Math.floor(Math.random()*pool.length)];
+ let u='1';for(let i=0;i<11;i++)u+=String(Math.floor(Math.random()*10));
+ if(u===S.uid)return frDemoReq();
+ if(S.friendReq.some(f=>f.u===u))return frDemoReq();
+ S.friendReq.push({u:u,n:n,r:Math.max(0,(S.realm|0)),s:Math.floor(Math.random()*9),p:(S.plane&&S.plane.idx)|0,t:Date.now()});
+ logAdd('✦ （演示）收到来自「'+n+'」的好友申请。');
+ try{save();}catch(e){}
+ renderFriend();
+}
+function frAccept(i){
+ ensureFriend();
+ const q=S.friendReq[i];if(!q)return;
+ S.friendReq.splice(i,1);
+ if(!S.friends.some(f=>f.u===q.u))S.friends.push({u:q.u,n:q.n,r:q.r,s:q.s,p:q.p,t:Date.now()});
+ logAdd('✦ 已同意「'+q.n+'」的好友申请。');
+ try{save();}catch(e){}
+ renderFriend();
+}
+function frReject(i){
+ ensureFriend();
+ const q=S.friendReq[i];if(!q)return;
+ S.friendReq.splice(i,1);
+ logAdd('✦ 已拒绝「'+q.n+'」的好友申请。');
+ try{save();}catch(e){}
+ renderFriend();
+}
+function frDel(i){
+ ensureFriend();
+ const f=S.friends[i];if(!f)return;
+ if(!confirm('确定删除好友「'+f.n+'」吗？'))return;
+ S.friends.splice(i,1);
+ logAdd('✦ 已删除好友「'+f.n+'」。');
+ try{save();}catch(e){}
+ renderFriend();
+}
+function frCopyUid(){ensureFriend();frCopy(S.uid,'道号已复制：'+S.uid);}
+function frCopyMyCode(){frCopy(frMyCode(),'好友码已复制，发给对方粘贴即可互加。');}
+let frBoard='realm';
+function frSetBoard(v){frBoard=(v===1||v==='plane')?'plane':'realm';renderFriend();}
+function frList(){
+ ensureFriend();
+ const me=frMe();
+ const all=[me].concat(S.friends.map(f=>({u:f.u,n:f.n,r:f.r|0,s:f.s|0,p:f.p|0,t:f.t||0})));
+ all.sort((a,b)=>{
+  const ka=frBoard==='realm'?frRealmScore(a):(a.p|0);
+  const kb=frBoard==='realm'?frRealmScore(b):(b.p|0);
+  if(kb!==ka)return kb-ka;
+  return String(a.n).localeCompare(String(b.n),'zh');
+ });
+ return all;
+}
+function renderFriend(){
+ const box=document.getElementById('tabFriend');
+ if(!box)return;
+ ensureFriend();
+ const btn=document.getElementById('tabBtnFriend');
+ if(btn)btn.classList.toggle('alert',S.friendReq.length>0);
+ const board=frList();
+ const me=frMe();
+ const isRealm=frBoard==='realm';
+ const val=o=>isRealm?frRealmScore(o):(o.p|0);
+ const maxv=Math.max(1,...board.map(val));
+ let h='';
+ h+='<div class="fr-card">'
+  +'<div class="fr-k">MY ID · 我的道号</div>'
+  +'<div class="fr-t">这串十二位数字就是你的身份，别人搜它才能加你</div>'
+  +'<div class="fr-row"><div class="fr-uid">'+S.uid+'</div>'
+  +'<button class="btn small" onclick="frCopyUid()">复制道号</button>'
+  +'<button class="btn small" onclick="frCopyMyCode()">复制好友码</button>'
+  +'<span class="fr-badge">本机锁定</span>'
+  +'<span class="fr-badge">'+frRealmText(me.r,me.s)+' · '+frPlaneText(me.p)+'</span></div>'
+  +'<div class="fr-dim" style="margin-top:8px">道号由本机生成并锁定，游戏内不可更改，也不会随导出存档或重置存档变化；换设备/清空浏览器数据才会得到新道号。<br>好友码里带着你此刻的境界与位面段位快照，对方粘贴后就能和你比拼；战绩变了再复制一次发给对方。</div>'
+  +'</div>';
+
+ h+='<div class="fr-card">'
+  +'<div class="fr-k">ADD · 添加好友</div>'
+  +'<div class="fr-t">粘贴对方的好友码，即可加为好友</div>'
+  +'<div class="fr-row"><input class="fr-in" id="frInput" placeholder="粘贴好友码（以 QY- 开头）" autocomplete="off">'
+  +'<button class="btn small" onclick="frAddByCode()">添加 / 处理申请</button>'
+  +'<button class="btn small" onclick="frApplyCode()">复制我的申请码</button></div>'
+  +'<div class="fr-note">'
+    +'<div class="fr-note-h">注意事项 · 为什么是交换好友码，而不是搜道号</div>'
+    +'<ol class="fr-note-l">'
+     +'<li>本游戏是纯静态单文件网页（架在 GitHub Pages 上），没有服务器、没有数据库，两个人的浏览器之间无法直接通信。所以「输入道号搜索并实时发申请」在架构上做不到。</li>'
+     +'<li>现在的方式是交换好友码：点「复制我的申请码」，用微信 / QQ 等任意方式发给对方；对方粘贴后，你就会出现在他好友页的「待处理申请」里，他点同意，你俩就互相上榜。</li>'
+     +'<li>好友码里装的是你<b>复制那一刻</b>的境界与位面快照，不是实时数据。你变强之后要再复制一次发给对方，他那边的排行才会更新。</li>'
+     +'<li>道号由本机生成并锁定，游戏内无法更改；换设备或清空浏览器数据会得到新道号，旧好友码里记的仍是旧号。</li>'
+    +'</ol>'
+    +'<div class="fr-dim" style="margin-top:6px">好友数据存在各自的存档里，互加好友码即可互相比拼；将来接入服务器后，才可能做到按道号实时申请与自动同步。</div>'
+    +'</div>'
+  +'</div>';
+
+ if(S.friendReq.length){
+  h+='<div class="fr-card" style="border-color:rgba(255,150,60,.55)">'
+   +'<div class="fr-k" style="color:#ffb86b">REQUESTS · 待处理申请（'+S.friendReq.length+'）</div>'
+   +'<div class="fr-t">同意后对方会进入你的好友列表</div>';
+  S.friendReq.forEach((q,i)=>{
+   h+='<div class="fr-item"><div class="fr-rank">?</div>'
+    +'<div><div class="fr-nm">'+(q.n||'无名道友')+' <span class="fr-dim">UID '+q.u+'</span></div>'
+    +'<div class="fr-dim">'+frRealmText(q.r|0,q.s|0)+' · '+frPlaneText(q.p|0)+'</div></div>'
+    +'<div class="fr-row"><button class="btn small" onclick="frAccept('+i+')">同意</button>'
+    +'<button class="btn small danger" onclick="frReject('+i+')">拒绝</button></div></div>';
+  });
+  h+='</div>';
+ }
+
+ h+='<div class="fr-card">'
+  +'<div class="fr-k">RANK · 排行榜</div>'
+  +'<div class="fr-t">与好友比拼'+(isRealm?'境界':'位面模拟段位')+'</div>'
+  +'<div class="fr-seg">'
+  +'<button class="btn small'+(isRealm?' primary':'')+'" onclick="frSetBoard(0)">境界榜</button>'
+  +'<button class="btn small'+(isRealm?'':' primary')+'" onclick="frSetBoard(1)">位面榜</button>'
+  +'</div>';
+ if(board.length<=1){
+  h+='<div class="fr-empty">还没有好友。把好友码发给同修，或让对方把码发给你——互加之后这里就会出现排名。</div>';
+ }else{
+  board.forEach((o,idx)=>{
+   const v=val(o);
+   h+='<div class="fr-item'+(o.me?' fr-me':'')+'">'
+    +'<div class="fr-rank'+(idx<3?' top':'')+'">'+(idx+1)+'</div>'
+    +'<div><div class="fr-nm">'+String(o.n||'无名道友')+(o.me?' <span class="fr-badge">我</span>':'')+'</div>'
+    +'<div class="fr-dim">'+(isRealm?frRealmText(o.r,o.s)+' · '+(o.r*9+o.s)+' 层序':frPlaneText(o.p))+'</div>'
+    +'<div class="fr-bar"><i style="width:'+Math.round(v/maxv*100)+'%"></i></div></div>'
+    +'<div class="fr-dim">'+(isRealm?(o.r*9+o.s):(o.p|0))+'</div></div>';
+  });
+ }
+ h+='</div>';
+
+ if(S.friends.length){
+  h+='<div class="fr-card"><div class="fr-k">FRIENDS · 好友（'+S.friends.length+'）</div>'
+   +'<div class="fr-t">点删除可移除，战绩以对方最近一次复制的好友码为准</div>';
+  S.friends.forEach((f,i)=>{
+   const mins=Math.max(0,Math.round((Date.now()-(f.t||0))/60000));
+   h+='<div class="fr-item"><div class="fr-rank">'+(i+1)+'</div>'
+    +'<div><div class="fr-nm">'+String(f.n||'无名道友')+' <span class="fr-dim">UID '+f.u+'</span></div>'
+    +'<div class="fr-dim">'+frRealmText(f.r|0,f.s|0)+' · '+frPlaneText(f.p|0)+' · 战绩更新于 '+(mins<1?'刚刚':mins+' 分钟前')+'</div></div>'
+    +'<div class="fr-row"><button class="btn small danger" onclick="frDel('+i+')">删除</button></div></div>';
+  });
+  h+='</div>';
+ }
+
+ h+='<div class="fr-card" style="border-style:dashed;opacity:.85"><div class="fr-k">DEMO · 演示</div>'
+  +'<div class="fr-row" style="margin-top:8px"><button class="btn small" onclick="frDemoReq()">模拟收到一条申请</button>'
+  +'<span class="fr-dim">用来预览「好友」页签变橙的效果，真实申请来自好友发来的申请码。</span></div></div>';
+
+ box.innerHTML=h;
+}
+/* =============== 好友模块结束 =============== */
 
 /* ---------- 事件与日志 ---------- */
 const EVENTS=[
@@ -2973,7 +3240,7 @@ function updateUI(){
  if(curTab==='Char')renderChar();
 }
 
-function renderTabs(){renderChar();if(typeof renderAch==='function')renderAch();renderGongfa();renderXinfa();renderWuji();renderTech();renderMarket();renderRing();if(typeof renderBattleTab==='function')renderBattleTab();renderBank();renderDongfu();renderStory();renderRecycle();animBars();}
+function renderTabs(){renderChar();if(typeof renderAch==='function')renderAch();renderGongfa();renderXinfa();renderWuji();renderTech();renderMarket();renderRing();if(typeof renderBattleTab==='function')renderBattleTab();renderBank();renderDongfu();renderStory();renderRecycle();if(typeof renderFriend==='function')renderFriend();animBars();}
 
 /* ---------- 角色数值详情 ---------- */
 function gongfaBreakdown(){
@@ -4267,7 +4534,9 @@ function pickGongfa(id){
  updateUI();renderTabs();save();
 }
 function openExport(){
- $('exportTa').value=JSON.stringify(S,null,1);
+ const _exp=Object.assign({},S);
+ delete _exp.uid;
+ $('exportTa').value=JSON.stringify(_exp,null,1);
  $('exportModal').style.display='flex';
 }
 function closeExport(){$('exportModal').style.display='none';}
@@ -4275,6 +4544,7 @@ function doImport(){
  try{
   const o=JSON.parse($('exportTa').value);
   if(!REALMS[o.realm])throw new Error('bad');
+  delete o.uid;
   S=Object.assign(fresh(),o);
   S.last=Date.now();
   save();
@@ -4364,6 +4634,7 @@ function migrateS(){
     logAdd('（旧档：《混元一气功》已按新版补全至「入门」）');
    }
    clampCap();
+   if(typeof lockUid==='function')lockUid();
 }
 function load(){
  let saved=null;
@@ -6361,7 +6632,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.1.1';
+const BUILD = '0.2.2';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
