@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.2.2 · 道友须知</title>
+<title>青元修真 · 测试版 v-0.3.1 · 联网道友</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -808,7 +808,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.2.2 — 道友须知</div>
+      <div class="sub">测试版 v-0.3.1 — 联网道友</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -2645,7 +2645,7 @@ function switchTab(name){
 
 
 /* ================= 好友模块（本地模式） ================= */
-const FR_BUILD='0.2.2';
+const FR_BUILD='0.3.0';
 const UID_KEY='qingyundao_uid';
 /* 道号绑定在本机，不随存档走：导出/导入/改档都改不到它 */
 function devUid(){
@@ -2765,14 +2765,15 @@ function frAccept(i){
  const q=S.friendReq[i];if(!q)return;
  S.friendReq.splice(i,1);
  if(!S.friends.some(f=>f.u===q.u))S.friends.push({u:q.u,n:q.n,r:q.r,s:q.s,p:q.p,t:Date.now()});
+ if(q.srv)apiAck(q.u,'accept');
  logAdd('✦ 已同意「'+q.n+'」的好友申请。');
  try{save();}catch(e){}
  renderFriend();
 }
 function frReject(i){
- ensureFriend();
  const q=S.friendReq[i];if(!q)return;
  S.friendReq.splice(i,1);
+ if(q.srv)apiAck(q.u,'reject');
  logAdd('✦ 已拒绝「'+q.n+'」的好友申请。');
  try{save();}catch(e){}
  renderFriend();
@@ -2802,6 +2803,119 @@ function frList(){
  });
  return all;
 }
+/* ---------- 在线道友服务（可选：配置了服务器地址才启用，未配置时退回好友码） ---------- */
+const API_KEY='qingyundao_api', TOKEN_KEY2='qingyundao_token';
+/* 默认在线道友服务（Cloudflare Worker）。玩家在界面上清空地址即退回好友码模式。 */
+const API_DEFAULT='https://qingyuan-friends.littlewink62.workers.dev';
+let apiLastSync='', apiBusy=false, apiState='off';
+function apiBase(){
+ try{
+  const v=localStorage.getItem(API_KEY);
+  if(v===null)return API_DEFAULT;
+  return String(v).replace(/\/+$/,'');
+ }catch(e){return API_DEFAULT;}
+}
+function apiToken(){try{return localStorage.getItem(TOKEN_KEY2)||'';}catch(e){return '';}}
+function apiSetToken(v){try{localStorage.setItem(TOKEN_KEY2,v||'');}catch(e){}}
+function apiOn(){return !!apiBase();}
+function apiSetBase(v){
+ try{ localStorage.setItem(API_KEY,(v||'').trim().replace(/\/+$/,'')); apiSetToken(''); }catch(e){}
+ apiState=apiOn()?'wait':'off';
+ if(apiOn())apiBoot(true);
+ renderFriend();
+}
+function apiReq(path,opt){
+ const b=apiBase();
+ if(!b)return Promise.resolve(null);
+ const ctl=(typeof AbortController!=='undefined')?new AbortController():null;
+ const timer=setTimeout(function(){if(ctl)ctl.abort();},9000);
+ return fetch(b+path,Object.assign({cache:'no-store'},opt,ctl?{signal:ctl.signal}:{}))
+  .then(function(r){return r.json();}).catch(function(){return null;})
+  .then(function(j){clearTimeout(timer);return j;});
+}
+function apiBoot(force){
+ if(!apiOn()){apiState='off';return;}
+ if(!S||!/^1\d{11}$/.test(String(S.uid||''))){apiState='wait';return;}
+ const me=frMe();
+ apiReq('/reg',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(me)})
+  .then(function(j){
+   if(j&&j.ok&&j.token){apiSetToken(j.token);apiState='on';}
+   else apiState=(j&&j.err)?'auth':'off';
+   renderFriend();
+  });
+}
+function apiSyncSnap(){
+ if(!apiOn()||!apiToken())return;
+ const me=frMe();
+ const sig=JSON.stringify([me.n,me.r,me.s,me.p]);
+ if(sig===apiLastSync)return;
+ apiLastSync=sig;
+ apiReq('/sync',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({u:S.uid,token:apiToken(),snap:me})});
+}
+function apiAddByUid(){
+ if(!apiOn()){toast('尚未配置在线服务器：请填服务器地址，或改用好友码');return;}
+ const el=document.getElementById('frUidIn');
+ const v=((el&&el.value)||'').replace(/\D/g,'');
+ if(!/^1\d{11}$/.test(v)){toast('道号是 12 位数字，以 1 开头');return;}
+ if(v===S.uid){toast('不能加自己');return;}
+ if(!apiToken()){apiBoot(true);toast('正在连接服务器，请稍后再试');return;}
+ apiReq('/req',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({u:S.uid,token:apiToken(),to:v})})
+  .then(function(j){
+   if(j&&j.ok){logAdd('✦ 申请已送达「'+(j.name||v)+'」，等他同意。');toast('申请已送达');apiPoll();}
+   else if(j&&j.err==='no-such-player'){logAdd('✕ 道号 '+v+' 还没有人用过。');toast('这个道号不存在');}
+   else if(j&&j.err==='already-friend'){toast('你们已经是好友了');}
+   else if(j&&j.err==='auth'){apiSetToken('');apiBoot(true);toast('令牌失效，正在重新连接');}
+   else{toast('发送失败，稍后再试');}
+  });
+}
+function apiPoll(){
+ if(!apiOn()||!apiToken()||apiBusy)return;
+ apiBusy=true;
+ const tk=apiToken();
+ Promise.all([
+  apiReq('/inbox?u='+encodeURIComponent(S.uid)+'&token='+encodeURIComponent(tk)),
+  apiReq('/friends?u='+encodeURIComponent(S.uid)+'&token='+encodeURIComponent(tk))
+ ]).then(function(r){
+  apiBusy=false;
+  const inb=r[0], fri=r[1];
+  let changed=false;
+  if(inb&&inb.ok&&Array.isArray(inb.list)){
+   const srv={};
+   for(const o of inb.list){
+    srv[o.u]=1;
+    const q=S.friendReq.find(function(x){return x.u===o.u;});
+    if(!q){S.friendReq.push({u:o.u,n:o.n,r:o.r|0,s:o.s|0,p:o.p|0,t:o.t||Date.now(),srv:1});changed=true;}
+    else if(q.r!==(o.r|0)||q.p!==(o.p|0)||q.n!==o.n){q.r=o.r|0;q.s=o.s|0;q.p=o.p|0;q.n=o.n;q.srv=1;changed=true;}
+   }
+   const before=S.friendReq.length;
+   S.friendReq=S.friendReq.filter(function(q){return !q.srv||srv[q.u];});
+   if(S.friendReq.length!==before)changed=true;
+  }
+  if(fri&&fri.ok&&Array.isArray(fri.list)){
+   for(const o of fri.list){
+    const f=S.friends.find(function(x){return x.u===o.u;});
+    if(!f){S.friends.push({u:o.u,n:o.n,r:o.r|0,s:o.s|0,p:o.p|0,t:o.t||Date.now(),srv:1});changed=true;}
+    else if(f.r!==(o.r|0)||f.p!==(o.p|0)||f.n!==o.n){f.r=o.r|0;f.s=o.s|0;f.p=o.p|0;f.n=o.n;f.srv=1;changed=true;}
+   }
+  }
+  if(changed){save();renderFriend();}
+ });
+}
+function apiAck(fromUid,act){
+ if(!apiOn()||!apiToken())return;
+ apiReq('/ack',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({u:S.uid,token:apiToken(),from:fromUid,act:act})})
+  .then(function(){setTimeout(apiPoll,300);});
+}
+function apiDropBase(){
+ try{localStorage.removeItem(API_KEY);localStorage.removeItem(TOKEN_KEY2);}catch(e){}
+ apiState='off';renderFriend();
+}
+function apiStartTimers(){
+ if(!apiOn())return;
+ apiBoot(false);
+ setInterval(function(){try{apiSyncSnap();}catch(e){}},60000);
+ setInterval(function(){try{if(document.visibilityState!=='hidden')apiPoll();}catch(e){}},25000);
+}
 function renderFriend(){
  const box=document.getElementById('tabFriend');
  if(!box)return;
@@ -2827,19 +2941,25 @@ function renderFriend(){
 
  h+='<div class="fr-card">'
   +'<div class="fr-k">ADD · 添加好友</div>'
-  +'<div class="fr-t">粘贴对方的好友码，即可加为好友</div>'
+  +'<div class="fr-t">'+(apiOn()?'按道号直接申请（在线模式）':'粘贴对方的好友码，即可加为好友')+'</div>'
+  +'<div class="fr-row"><input class="fr-in" id="frUidIn" placeholder="输入对方道号（12 位数字）" autocomplete="off" inputmode="numeric">'
+  +'<button class="btn small" onclick="apiAddByUid()">按道号申请</button></div>'
   +'<div class="fr-row"><input class="fr-in" id="frInput" placeholder="粘贴好友码（以 QY- 开头）" autocomplete="off">'
   +'<button class="btn small" onclick="frAddByCode()">添加 / 处理申请</button>'
   +'<button class="btn small" onclick="frApplyCode()">复制我的申请码</button></div>'
   +'<div class="fr-note">'
     +'<div class="fr-note-h">注意事项 · 为什么是交换好友码，而不是搜道号</div>'
     +'<ol class="fr-note-l">'
-     +'<li>本游戏是纯静态单文件网页（架在 GitHub Pages 上），没有服务器、没有数据库，两个人的浏览器之间无法直接通信。所以「输入道号搜索并实时发申请」在架构上做不到。</li>'
+     +'<li>'+(apiOn()?'前端是纯静态单文件网页，但已接入在线道友服务（Cloudflare Worker + KV）：按道号申请会实时送达，好友境界每 25 秒自动同步一次。':'本游戏是纯静态单文件网页（架在 GitHub Pages 上），没有服务器、没有数据库，两个人的浏览器之间无法直接通信。所以「输入道号搜索并实时发申请」在架构上做不到。')+'</li>'
      +'<li>现在的方式是交换好友码：点「复制我的申请码」，用微信 / QQ 等任意方式发给对方；对方粘贴后，你就会出现在他好友页的「待处理申请」里，他点同意，你俩就互相上榜。</li>'
      +'<li>好友码里装的是你<b>复制那一刻</b>的境界与位面快照，不是实时数据。你变强之后要再复制一次发给对方，他那边的排行才会更新。</li>'
      +'<li>道号由本机生成并锁定，游戏内无法更改；换设备或清空浏览器数据会得到新道号，旧好友码里记的仍是旧号。</li>'
     +'</ol>'
-    +'<div class="fr-dim" style="margin-top:6px">好友数据存在各自的存档里，互加好友码即可互相比拼；将来接入服务器后，才可能做到按道号实时申请与自动同步。</div>'
+    +'<div class="fr-dim" style="margin-top:6px">'+(apiOn()?'在线模式已开启：断网或对方未上线时，仍可用好友码兜底。':'好友数据存在各自的存档里，互加好友码即可互相比拼；填了服务器地址后，就能按道号实时申请与自动同步。')+'</div>'
+    +'<div class="fr-row" style="margin-top:8px"><input class="fr-in" id="frApiIn" placeholder="在线服务地址（留空 = 离线好友码模式）" value="'+String(apiBase()).replace(/"/g,'')+'">'
+    +'<button class="btn small" onclick="apiSetBase(document.getElementById(\'frApiIn\').value)">保存</button>'
+    +'<button class="btn small" onclick="apiDropBase()">清除</button></div>'
+    +'<div class="fr-dim" style="margin-top:4px">当前：'+(apiOn()?('在线 · '+(apiState==='on'?'已连接':(apiState==='auth'?'令牌异常，点保存可重连':'连接中'))):'离线')+'</div>'
     +'</div>'
   +'</div>';
 
@@ -4749,6 +4869,7 @@ load();
 updateUI();
 renderTabs();
 switchTab(curTab);
+apiStartTimers();
 </script>
 <script>
 /* ================= 拟态战斗（v2.8） ================= */
@@ -6632,7 +6753,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.2.2';
+const BUILD = '0.3.1';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
@@ -6660,6 +6781,7 @@ const BUILD = '0.2.2';
   document.addEventListener('visibilitychange',function(){ if(!document.hidden)check(); });
   setInterval(check,300000);
 })();
+
 </script>
 </body>
 </html>
