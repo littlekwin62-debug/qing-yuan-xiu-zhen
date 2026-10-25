@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.3.1 · 联网道友</title>
+<title>青元修真 · 测试版 v-0.3.2 · 联网道友</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -808,7 +808,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.3.1 — 联网道友</div>
+      <div class="sub">测试版 v-0.3.2 — 联网道友</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -2807,12 +2807,18 @@ function frList(){
 const API_KEY='qingyundao_api', TOKEN_KEY2='qingyundao_token';
 /* 默认在线道友服务（Cloudflare Worker）。玩家在界面上清空地址即退回好友码模式。 */
 const API_DEFAULT='https://qingyuan-friends.littlewink62.workers.dev';
-let apiLastSync='', apiBusy=false, apiState='off';
+let apiLastSync='', apiBusy=false, apiState='off', apiErr='', apiMsg='';
+function apiNorm(v){
+ let t=String(v||'').trim().replace(/\/+$/,'');
+ t=t.replace(/\/(health|reg|sync|req|inbox|ack|friends|p)$/,'').replace(/\/+$/,'');
+ if(t && !/^https?:\/\//i.test(t))t='https://'+t;
+ return t;
+}
 function apiBase(){
  try{
   const v=localStorage.getItem(API_KEY);
   if(v===null)return API_DEFAULT;
-  return String(v).replace(/\/+$/,'');
+  return apiNorm(String(v));
  }catch(e){return API_DEFAULT;}
 }
 function apiToken(){try{return localStorage.getItem(TOKEN_KEY2)||'';}catch(e){return '';}}
@@ -2830,17 +2836,20 @@ function apiReq(path,opt){
  const ctl=(typeof AbortController!=='undefined')?new AbortController():null;
  const timer=setTimeout(function(){if(ctl)ctl.abort();},9000);
  return fetch(b+path,Object.assign({cache:'no-store'},opt,ctl?{signal:ctl.signal}:{}))
-  .then(function(r){return r.json();}).catch(function(){return null;})
-  .then(function(j){clearTimeout(timer);return j;});
+  .then(function(r){apiErr='';return r.json();})
+  .catch(function(e){apiErr=(e&&e.message)?String(e.message):'网络请求失败';return null;})
+  .then(function(j){clearTimeout(timer);if(!j)apiErr=apiErr||'服务器无响应';return j;});
 }
 function apiBoot(force){
  if(!apiOn()){apiState='off';return;}
  if(!S||!/^1\d{11}$/.test(String(S.uid||''))){apiState='wait';return;}
+ apiState='wait';apiErr='';
  const me=frMe();
  apiReq('/reg',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(me)})
   .then(function(j){
-   if(j&&j.ok&&j.token){apiSetToken(j.token);apiState='on';}
-   else apiState=(j&&j.err)?'auth':'off';
+   if(j&&j.ok&&j.token){apiSetToken(j.token);apiState='on';apiErr='';}
+   else if(j&&j.err){apiState='auth';apiErr='服务器返回：'+j.err;}
+   else{apiState='fail';apiErr=apiErr||'注册失败';}
    renderFriend();
   });
 }
@@ -2906,6 +2915,16 @@ function apiAck(fromUid,act){
  apiReq('/ack',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({u:S.uid,token:apiToken(),from:fromUid,act:act})})
   .then(function(){setTimeout(apiPoll,300);});
 }
+function apiPing(){
+ const b=apiBase();
+ if(!b){apiMsg='未填写服务地址';renderFriend();return;}
+ apiMsg='测试中…';renderFriend();
+ apiReq('/health',{}).then(function(j){
+  if(j&&j.ok)apiMsg='连通正常（服务器时间 '+new Date(j.ts||Date.now()).toLocaleTimeString()+'）';
+  else apiMsg='失败：'+(apiErr||(j&&j.err)||'无响应');
+  renderFriend();
+ });
+}
 function apiDropBase(){
  try{localStorage.removeItem(API_KEY);localStorage.removeItem(TOKEN_KEY2);}catch(e){}
  apiState='off';renderFriend();
@@ -2959,7 +2978,8 @@ function renderFriend(){
     +'<div class="fr-row" style="margin-top:8px"><input class="fr-in" id="frApiIn" placeholder="在线服务地址（留空 = 离线好友码模式）" value="'+String(apiBase()).replace(/"/g,'')+'">'
     +'<button class="btn small" onclick="apiSetBase(document.getElementById(\'frApiIn\').value)">保存</button>'
     +'<button class="btn small" onclick="apiDropBase()">清除</button></div>'
-    +'<div class="fr-dim" style="margin-top:4px">当前：'+(apiOn()?('在线 · '+(apiState==='on'?'已连接':(apiState==='auth'?'令牌异常，点保存可重连':'连接中'))):'离线')+'</div>'
+    +'<div class="fr-dim" style="margin-top:4px">当前：'+(apiOn()?('在线 · '+(apiState==='on'?'已连接':(apiState==='auth'?('令牌异常（'+(apiErr||'需重连')+'）'):(apiState==='fail'?('连接失败（'+(apiErr||'未知')+'）'):'连接中')))):'离线')+(apiMsg?('　｜　'+apiMsg):'')+'</div>'
+    +'<div style="margin-top:6px"><button class="btn small" onclick="apiPing()">测试连接</button></div>'
     +'</div>'
   +'</div>';
 
@@ -6753,7 +6773,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.3.1';
+const BUILD = '0.3.2';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
