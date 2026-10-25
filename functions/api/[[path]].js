@@ -22,7 +22,15 @@
 /* ---------- B 方案（不绑定 KV 时用）：填这三个常量 ---------- */
 const CF_ACC = '96deee7f2257d70cca2cb5ed79dabff4';   // 账号 ID（32 位 hex，Dashboard 右下角/URL 里可见）
 const CF_NS  = 'ec9a8ee25dc446cbb5da8317c8638eca';   // KV 命名空间 ID，例如 6f1c…（Workers KV 列表里那一列）
-const CF_TOK = 'cfut_tTlvBJ4Yuf5WoGK5bUad6CFZISEYmTUxcMtlL18485b628e';   // API 令牌，权限 Workers KV Storage:Edit
+const CF_TOK = '';   // API 令牌，权限 Workers KV Storage:Edit
+
+/* ---------- C 方案：Upstash Redis（免费、纯 REST，不依赖 CF 绑定）----------
+ * 在 upstash.com 建一个 Redis 库，把 REST URL 和 REST TOKEN 填到这里即可。
+ * 例：const UPSTASH_URL='https://xxx.upstash.io'; const UPSTASH_TOKEN='AXxx…';
+ */
+const UPSTASH_URL = '';
+const UPSTASH_TOKEN = '';
+const UPSTASH_READY = !!UPSTASH_URL && !!UPSTASH_TOKEN;
 
 /* 统一存储层：有 env.KV 用它，否则走 REST API */
 function store(env) {
@@ -35,6 +43,27 @@ function store(env) {
       },
     };
   }
+  if (UPSTASH_READY) {
+    const uh = { authorization: 'Bearer ' + UPSTASH_TOKEN };
+    const call = async (cmd) => {
+      const r = await fetch(UPSTASH_URL, {
+        method: 'POST',
+        headers: { ...uh, 'content-type': 'application/json' },
+        body: JSON.stringify(cmd),
+      });
+      if (!r.ok) return null;
+      const j = await r.json().catch(() => null);
+      return j && j.result !== undefined ? j.result : null;
+    };
+    return {
+      get: (k) => call(['GET', k]),
+      put: async (k, v) => {
+        const out = await call(['SET', k, String(v)]);
+        return out === 'OK';
+      },
+    };
+  }
+
   const base =
     'https://api.cloudflare.com/client/v4/accounts/' +
     encodeURIComponent(CF_ACC) +
@@ -132,7 +161,7 @@ export async function onRequest(ctx) {
         }
         return J({
           ok: true,
-          mode: env && env.KV ? 'kv-binding' : 'rest-api',
+          mode: env && env.KV ? 'kv-binding' : (UPSTASH_READY ? 'upstash' : 'rest-api'),
           wrote: !!wrote,
           readBack: back,
           err,
