@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.3.3 · 联网道友</title>
+<title>青元修真 · 测试版 v-0.3.4 · 联网道友</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -808,7 +808,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.3.3 — 联网道友</div>
+      <div class="sub">测试版 v-0.3.4 — 联网道友</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -2806,7 +2806,8 @@ function frList(){
 /* ---------- 在线道友服务（可选：配置了服务器地址才启用，未配置时退回好友码） ---------- */
 const API_KEY='qingyundao_api', TOKEN_KEY2='qingyundao_token';
 /* 默认在线道友服务（Cloudflare Worker）。玩家在界面上清空地址即退回好友码模式。 */
-const API_DEFAULT='https://qingyuan-friends.littlewink62.workers.dev';
+const API_DEFAULT='/api';
+const API_FALLBACK='https://qingyuan-friends.littlewink62.workers.dev';
 let apiLastSync='', apiBusy=false, apiState='off', apiErr='', apiMsg='';
 function apiHint(e){
  const m=String((e&&e.message)||e||'');
@@ -2817,6 +2818,7 @@ function apiHint(e){
 function apiNorm(v){
  let t=String(v||'').trim().replace(/\/+$/,'');
  t=t.replace(/\/(health|reg|sync|req|inbox|ack|friends|p)$/,'').replace(/\/+$/,'');
+ if(/^\//.test(t))return t; // 同源相对地址（Cloudflare Pages Functions）
  if(t && !/^https?:\/\//i.test(t))t='https://'+t;
  return t;
 }
@@ -2836,7 +2838,7 @@ function apiSetBase(v){
  if(apiOn())apiBoot(true);
  renderFriend();
 }
-function apiReq(path,opt){
+function apiReq(path,opt,retried){
  const b=apiBase();
  if(!b)return Promise.resolve(null);
  const ctl=(typeof AbortController!=='undefined')?new AbortController():null;
@@ -2844,7 +2846,15 @@ function apiReq(path,opt){
  return fetch(b+path,Object.assign({cache:'no-store'},opt,ctl?{signal:ctl.signal}:{}))
   .then(function(r){apiErr='';return r.json();})
   .catch(function(e){apiErr=apiHint(e);return null;})
-  .then(function(j){clearTimeout(timer);if(!j)apiErr=apiErr||'服务器无响应';return j;});
+  .then(function(j){
+   clearTimeout(timer);
+   if(!j && !retried && b==='/api' && API_FALLBACK){
+    try{localStorage.setItem(API_KEY,API_FALLBACK);}catch(e){}
+    return apiReq(path,opt,true);
+   }
+   if(!j)apiErr=apiErr||'服务器无响应';
+   return j;
+  });
 }
 function apiBoot(force){
  if(!apiOn()){apiState='off';return;}
@@ -6779,7 +6789,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.3.3';
+const BUILD = '0.3.4';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
