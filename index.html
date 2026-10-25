@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.3.4 · 联网道友</title>
+<title>青元修真 · 测试版 v-0.3.5 · 联网道友</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -808,7 +808,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.3.4 — 联网道友</div>
+      <div class="sub">测试版 v-0.3.5 — 联网道友</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -2639,7 +2639,10 @@ function switchTab(name){
  if(name==='Wuji'&&typeof renderWuji==='function')renderWuji();
  if(name==='Recycle')renderRecycle();
  if(name==='Ach'&&typeof renderAch==='function')renderAch();
- if(name==='Friend'&&typeof renderFriend==='function')renderFriend();
+ if(name==='Friend'){
+  if(typeof renderFriend==='function')renderFriend();
+  if(typeof apiPoll==='function')setTimeout(function(){try{apiPoll();}catch(e){}},80);
+ }
  if(name==='Battle'&&typeof renderBattleTab==='function')renderBattleTab();
 }
 
@@ -2895,6 +2898,8 @@ function apiAddByUid(){
 }
 function apiPoll(){
  if(!apiOn()||!apiToken()||apiBusy)return;
+ if(document.visibilityState==='hidden')return;
+ if(typeof curTab!=='undefined'&&curTab!=='Friend')return; // 只在好友页轮询
  apiBusy=true;
  const tk=apiToken();
  Promise.all([
@@ -2945,11 +2950,18 @@ function apiDropBase(){
  try{localStorage.removeItem(API_KEY);localStorage.removeItem(TOKEN_KEY2);}catch(e){}
  apiState='off';renderFriend();
 }
+if(typeof document!=='undefined'&&document.addEventListener){
+ document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'&&typeof curTab!=='undefined'&&curTab==='Friend'){
+   setTimeout(function(){try{apiPoll();}catch(e){}},120);
+  }
+ });
+}
 function apiStartTimers(){
  if(!apiOn())return;
  apiBoot(false);
  setInterval(function(){try{apiSyncSnap();}catch(e){}},60000);
- setInterval(function(){try{if(document.visibilityState!=='hidden')apiPoll();}catch(e){}},25000);
+ setInterval(function(){try{apiPoll();}catch(e){}},25000);
 }
 function renderFriend(){
  const box=document.getElementById('tabFriend');
@@ -2985,7 +2997,7 @@ function renderFriend(){
   +'<div class="fr-note">'
     +'<div class="fr-note-h">注意事项 · 为什么是交换好友码，而不是搜道号</div>'
     +'<ol class="fr-note-l">'
-     +'<li>'+(apiOn()?'前端是纯静态单文件网页，但已接入在线道友服务（Cloudflare Worker + KV）：按道号申请会实时送达，好友境界每 25 秒自动同步一次。':'本游戏是纯静态单文件网页（架在 GitHub Pages 上），没有服务器、没有数据库，两个人的浏览器之间无法直接通信。所以「输入道号搜索并实时发申请」在架构上做不到。')+'</li>'
+     +'<li>'+(apiOn()?'前端是纯静态单文件网页，但已接入在线道友服务（Cloudflare Worker + KV）：按道号申请会实时送达，停在好友页时每 25 秒自动同步一次（切走就停，省流量）。':'本游戏是纯静态单文件网页（架在 GitHub Pages 上），没有服务器、没有数据库，两个人的浏览器之间无法直接通信。所以「输入道号搜索并实时发申请」在架构上做不到。')+'</li>'
      +'<li>现在的方式是交换好友码：点「复制我的申请码」，用微信 / QQ 等任意方式发给对方；对方粘贴后，你就会出现在他好友页的「待处理申请」里，他点同意，你俩就互相上榜。</li>'
      +'<li>好友码里装的是你<b>复制那一刻</b>的境界与位面快照，不是实时数据。你变强之后要再复制一次发给对方，他那边的排行才会更新。</li>'
      +'<li>道号由本机生成并锁定，游戏内无法更改；换设备或清空浏览器数据会得到新道号，旧好友码里记的仍是旧号。</li>'
@@ -6789,7 +6801,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.3.4';
+const BUILD = '0.3.5';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
