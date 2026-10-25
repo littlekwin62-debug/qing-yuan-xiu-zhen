@@ -29,7 +29,10 @@ function store(env) {
   if (env && env.KV && typeof env.KV.get === 'function') {
     return {
       get: (k) => env.KV.get(k),
-      put: (k, v) => env.KV.put(k, v),
+      put: async (k, v) => {
+        await env.KV.put(k, v);
+        return true;
+      },
     };
   }
   const base =
@@ -117,6 +120,25 @@ export async function onRequest(ctx) {
     try {
       if (path === '/health') return J({ ok: true, ts: Date.now() });
 
+      if (path === '/diag') {
+        const st = await store(env);
+        const probe = 'diag:' + Date.now();
+        let wrote = false, back = null, err = '';
+        try {
+          wrote = await st.put(probe, 'ok');
+          back = await st.get(probe);
+        } catch (e) {
+          err = String((e && e.message) || e);
+        }
+        return J({
+          ok: true,
+          mode: env && env.KV ? 'kv-binding' : 'rest-api',
+          wrote: !!wrote,
+          readBack: back,
+          err,
+        });
+      }
+
       /* ---------- 注册 / 令牌 ---------- */
       if (path === '/reg' && req.method === 'POST') {
         const body = await req.json();
@@ -125,7 +147,8 @@ export async function onRequest(ctx) {
         let token = await (await store(env)).get('k:' + uid);
         if (!token) {
           token = hex(16);
-          await (await store(env)).put('k:' + uid, token);
+          const saved = await (await store(env)).put('k:' + uid, token);
+          if (!saved) return J({ ok: false, err: 'storage' }, 500);
         }
         await writeJson(env, 'p:' + uid, cleanSnap(body, uid));
         return J({ ok: true, token });
