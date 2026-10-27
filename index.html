@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.3.7 · 联网道友</title>
+<title>青元修真 · 测试版 v-0.3.8 · 联网道友</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -667,6 +667,12 @@ footer{color:#5E7592;letter-spacing:1px}
 .btl-sword-card .sk3{font-size:12.5px;line-height:1.85;color:#8FA3B2;max-width:520px}
 .btl-sword-art{display:flex;justify-content:center;align-items:center}
 .btl-sword-art svg{filter:drop-shadow(0 0 12px rgba(95,208,224,.45))}
+.btl-mode-wrap{display:grid;gap:14px}
+.btl-plane-card{border-color:rgba(122,170,255,.3);background:linear-gradient(120deg,rgba(20,38,72,.86),rgba(9,13,22,.92))}
+.btl-plane-card .sk1{color:#7FA8EE}
+.btl-plane-art{display:flex;justify-content:center;align-items:center}
+.btl-plane-art svg{filter:drop-shadow(0 0 14px rgba(127,211,255,.4))}
+@media(max-width:620px){.btl-plane-card{grid-template-columns:1fr}.btl-plane-art{display:none}}
 /* v2.9 战斗页：右侧关卡信息 + 2×2 技能球 */
 .btl-side{position:absolute;right:12px;top:40px;width:152px;padding:9px 11px;border-radius:10px;background:rgba(6,11,18,.55);border:1px solid rgba(90,190,205,.14);font-size:10.5px;color:#8B98AC;pointer-events:none;line-height:1.65}
 .btl-side .bs-row{display:flex;justify-content:space-between;gap:8px}
@@ -808,7 +814,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.3.7 — 联网道友</div>
+      <div class="sub">测试版 v-0.3.8 — 联网道友</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -6839,24 +6845,59 @@ function btlDrawMob(ctx,e){
  ctx.fillStyle=e.elite?'#F0CE7E':'#E0644F';ctx.fillRect(-w/2,-e.r-11,w*hpk,3.4);
  ctx.restore();
 }
+/* 从页签直接进入指定模式：hunt = 幻境试剑，plane = 位面模拟 */
+function btlOpenMode(m){
+ if(typeof m==='string')B.mode=m;
+ btlOpen();
+}
+
+const BTL_SWORD_SVG='<div class="btl-sword-art"><svg width="120" height="150" viewBox="0 0 120 150" aria-hidden="true">'
+ +'<defs><linearGradient id="btlSword" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFF6FA"/><stop offset="0.55" stop-color="#5FD0E0"/><stop offset="1" stop-color="#2A7F91"/></linearGradient></defs>'
+ +'<path d="M60 6 L70 34 L64 96 L60 104 L56 96 L50 34 Z" fill="url(#btlSword)" stroke="#9FE7F0" stroke-width="1.2" opacity="0.95"/>'
+ +'<rect x="38" y="104" width="44" height="6" rx="3" fill="#F0CE7E" opacity="0.85"/>'
+ +'<rect x="56" y="110" width="8" height="26" rx="3" fill="#3A4A5A"/>'
+ +'<circle cx="60" cy="140" r="5" fill="#F0CE7E" opacity="0.85"/>'
+ +'</svg></div>';
+
+const BTL_PLANET_SVG='<div class="btl-plane-art"><svg width="140" height="152" viewBox="0 0 140 152" aria-hidden="true">'
+ +'<defs>'
+ +'<radialGradient id="plG" cx="36%" cy="28%" r="76%"><stop offset="0" stop-color="#9BE4FF"/><stop offset="0.42" stop-color="#3C86CC"/><stop offset="1" stop-color="#102E55"/></radialGradient>'
+ +'<linearGradient id="plRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#DFFBFF" stop-opacity="0.95"/><stop offset="0.5" stop-color="#7FE3E0" stop-opacity="0.6"/><stop offset="1" stop-color="#CFF6FA" stop-opacity="0.25"/></linearGradient>'
+ +'</defs>'
+ +'<g transform="translate(70,76) rotate(-16)"><ellipse rx="63" ry="17" fill="none" stroke="url(#plRing)" stroke-width="6.5" opacity="0.75"/></g>'
+ +'<circle cx="70" cy="76" r="40" fill="url(#plG)"/>'
+ +'<ellipse cx="63" cy="57" rx="23" ry="7" fill="#CFEFFF" opacity="0.20" transform="rotate(-13 63 57)"/>'
+ +'<ellipse cx="80" cy="95" rx="17" ry="6" fill="#CFEFFF" opacity="0.15" transform="rotate(-9 80 95)"/>'
+ +'<circle cx="70" cy="76" r="40" fill="none" stroke="#C7EEFF" stroke-width="1.1" opacity="0.55"/>'
+ +'<g transform="translate(70,76) rotate(-16)"><path d="M-63,0 A63,17 0 0 0 63,0" fill="none" stroke="url(#plRing)" stroke-width="6.5" stroke-linecap="round"/></g>'
+ +'<circle cx="114" cy="32" r="1.7" fill="#DFFBFF" opacity="0.85"/>'
+ +'<circle cx="24" cy="46" r="1.3" fill="#DFFBFF" opacity="0.6"/>'
+ +'<circle cx="101" cy="124" r="1.5" fill="#DFFBFF" opacity="0.55"/>'
+ +'</svg></div>';
+
 function renderBattleTab(){
  const box=$('tabBattle');
  if(!box)return;
- box.innerHTML='<div class="btl-sword-card" onclick="btlOpen()" style="cursor:pointer">'
-  +'<div><div class="sk1">MIMETIC COMBAT · 拟态战斗</div>'
+ const planeNow=planeFlat();
+ box.innerHTML='<div class="btl-mode-wrap">'
+  +'<div class="btl-sword-card" onclick="btlOpenMode(\'hunt\')" style="cursor:pointer">'
+  +'<div><div class="sk1">MIMETIC COMBAT · 拟态战斗 · 其一</div>'
   +'<div class="sk2">幻境试剑</div>'
   +'<div class="sk3">以神识构筑幻境，与妖兽鏖战。剑修出剑气，丹修放丹气，体修挥拳风——招招追形逐影。每入一层，妖物愈众、愈快、愈狠。'
-  +'<br>普攻每 0.5 秒一次，每命中一击积一点充能；六十充能可放终结技，四十道橙红气象自周身激射而出，最近三敌轮流承接、角度微散，目标倒下则自动改追他敌，每击中回一点气血——但需五十点精神力为引。</div>'
-  +'<div style="margin-top:14px"><button class="btn" onclick="event.stopPropagation();btlOpen()">进入幻境</button>'
+  +'<br>按境界自选副本、再选难度；幻境中陨落不会真正死去，但战果会打折。</div>'
+  +'<div style="margin-top:14px"><button class="btn" onclick="event.stopPropagation();btlOpenMode(\'hunt\')">进入幻境</button>'
   +'<span class="btl-sub" style="margin-left:10px">'+REALMS[S.realm].name+'期 可战 · 当前 '+btlClassLabel()+'</span></div></div>'
-  +'<div class="btl-sword-art"><svg width="120" height="150" viewBox="0 0 120 150" aria-hidden="true">'
-  +'<defs><linearGradient id="btlSword" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFF6FA"/><stop offset="0.55" stop-color="#5FD0E0"/><stop offset="1" stop-color="#2A7F91"/></linearGradient></defs>'
-  +'<path d="M60 6 L70 34 L64 96 L60 104 L56 96 L50 34 Z" fill="url(#btlSword)" stroke="#9FE7F0" stroke-width="1.2" opacity="0.95"/>'
-  +'<rect x="38" y="104" width="44" height="6" rx="3" fill="#F0CE7E" opacity="0.85"/>'
-  +'<rect x="56" y="110" width="8" height="26" rx="3" fill="#3A4A5A"/>'
-  +'<circle cx="60" cy="140" r="5" fill="#F0CE7E" opacity="0.85"/>'
-  +'</svg></div></div>'
-  +'<div class="desc" style="margin-top:10px">幻境战果：修为丹（每局 1 枚，其修为约合当前大境界一层上限的 80%，并随难度递增）、下品灵石与妖丹，均存于储物戒。</div>';
+  +BTL_SWORD_SVG+'</div>'
+  +'<div class="btl-sword-card btl-plane-card" onclick="btlOpenMode(\'plane\')" style="cursor:pointer">'
+  +'<div><div class="sk1">PLANE SIMULATION · 拟态战斗 · 其二</div>'
+  +'<div class="sk2">位面模拟</div>'
+  +'<div class="sk3">自废铁一级起，循九大位面逐级登临，共一百三十级。位面不退——胜一场按战评升段（S 进 4 级 / A 3 级 / B 2 级 / C 1 级），跨大段位只到新段位第一级。'
+  +'<br>段位越高妖物越强，黄金起敌方带增益、紫金起你带减益；虫王层守着破境丹与虫腺。难度另分四档，越高战果越丰。</div>'
+  +'<div style="margin-top:14px"><button class="btn" onclick="event.stopPropagation();btlOpenMode(\'plane\')">进入位面</button>'
+  +'<span class="btl-sub" style="margin-left:10px">当前 '+planeLabel(planePick())+' · 难度 '+BDIF[planeDif()].name+'</span></div></div>'
+  +BTL_PLANET_SVG+'</div>'
+  +'<div class="desc" style="margin-top:10px">幻境战果：修为丹（每局 1 枚，其修为约合当前大境界一层上限的 80%，并随难度递增）、下品灵石与妖丹，均存于储物戒。</div>'
+  +'</div>';
 }
 if(typeof renderBattleTab==='function')renderBattleTab();
 
@@ -6864,7 +6905,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.3.7';
+const BUILD = '0.3.8';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
