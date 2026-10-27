@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.4.1 · 钉落无声</title>
+<title>青元修真 · 测试版 v-0.4.3 · 三瓣分花</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -817,7 +817,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.4.1 — 钉落无声</div>
+      <div class="sub">测试版 v-0.4.3 — 三瓣分花</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -838,7 +838,7 @@ footer{color:#5E7592;letter-spacing:1px}
       <li>成就：与「角色」并列的模块，共 50 桩——35 桩简单、10 桩困难、5 桩十分困难，横跨炼气至大乘巅峰，分别用于破境、斩妖、参悟、积财。达成即刻点亮并立刻生效（无需领取），屏幕右上会弹出成就卡片，点卡片直接跳到成就页。加成分三类：25 桩提升修为增速（单桩 2%–10%，其中 9 桩超过 5%）、20 桩提升攻击/防御/精神上限/暴伤、5 桩提升灵石获取；成就页按难度分组，未达成的条目会显示进度（如「4 / 5（80%）」），并写明达成方式。</li>
       <li>武技页可参悟《分裂剑》与《横斩》：《分裂剑》是远程剑气，冷却一到自动出手；《横斩》是一道金色月牙，先锁最远处的敌人、命中后转攻下一个最远的，入场连锁三人；首击 135%、其后每次 120%，被锁定的敌手除了主伤害还会再吃一次等额路径伤害，掠过路径上的其他敌人同样吃 120%；小成首击 185%、大成后续与路径一并升到 135%、融会贯通可连斩五人、完全掌握一次挥出两道，冷却 5 秒、耗 5 点精神力。战斗中也可在「拟态战斗 · 装配」里挑两门带上。</li>
       <li>法宝在坊市「法宝」页以修为与下品灵石购置，买后收进储物戒，可在储物戒「法宝」页签里装配，最多同时装配 5 件、同一种法宝只能装一件；法宝只加数值、不加修为产出，回收时只按原价的六成返还灵石（不返修为）。</li>
-      <li>拟态战斗分两种：幻境试剑按境界与难度自选；位面模拟按段位递进（废铁→主宰共 130 级），没有境界与难度可选，胜场按战评升段（S 进 4 级 / A 3 级 / B 2 级 / C 1 级），跨大段位只到新段位第 1 级。黄金起敌方带增益、紫金起你带减益，战评按剩余气血 80%/60%/40% 划分。</li>
+      <li>拟态战斗分两种：幻境试剑按境界与难度自选；位面模拟按段位递进（废铁→主宰共 130 级），没有境界与难度可选，胜场按战评升段（S 进 4 级 / A 3 级 / B 2 级 / C 1 级），跨大段位只到新段位第 1 级。黄金起敌方带增益、紫金起你带减益，战评按剩余气血 80%/60%/40% 划分。段位只认最高关：只有挑战「当前最高档」才升段，回打已通过的低段关卡只拿奖励、段位原地不动。</li>
       <li>位面主宰 5、10、15、20、25、30 级是《虫王》关：虫王不动、每 2 秒生 3-5 只小蜘蛛、间歇吐蛛网缠住你（移速大减 2 秒）；场上会浮现 5 个灵气光点，采集后 10 道紫气齐落虫王，60 秒后再现。首胜有机会得破境丹与虫腺。</li>
       <li>判罚之钉：元婴以上突破小境界有 20% 概率触发。钉子钉在修为球上，期间四维只剩一成、修为与灵石停涨、心魔红尘不侵；点击钉子叩击 12 次（化神 15、大乘 18）后天道收手 60 秒，之后恢复。</li>
       <li>位面模拟的虫王关：身上会缠上蛛网（脚下出现蛛网、移速只剩一成、持续 2 秒）；开战满 60 秒后，蛛网每次缠身还会额外挨一记虫王五成攻击力的物理伤害，所以别拖。</li>
@@ -3875,7 +3875,7 @@ const WUJI_STAGE=['入门','小成','大成','融会贯通','完全掌握'];
 const ULTS=[
  {id:'baoyu',name:'暴雨天菊',grade:'三品上',border:'green',
   flavor:'「菊开一瞬，雨落千瓣。」',
-  desc:'以自身为蕊，连放三段暴雨天菊绕身旋转；每段 15 枚花瓣，段与段之间隔 2 秒。旋转 1.8 秒内触敌即伤（草属，攻击力 5%），此间命中不积充能；旋转毕，花瓣极速索敌，中途不散，命中造成攻击力 60% 物理 + 45% 草属，并积 0.8 充能。草属伤害会使妖物「染草」1 秒（元素反应将在后续版本接入）。',
+  desc:'以自身为蕊，连放三段暴雨天菊绕身旋转；每段 15 枚花瓣，段与段之间隔 2 秒。旋转 1.8 秒内触敌即伤（草属，攻击力 5%），此间命中不积充能；旋转毕，花瓣极速索敌，中途不散，命中造成攻击力 60% 物理 + 45% 草属，并积 0.8 充能。草属伤害会使妖物「染草」1 秒（元素反应将在后续版本接入）。同一妖物最多被 3 枚花瓣锁定，超出的花瓣转投它敌；若场上妖物都被 3 枚锁满（少怪、单只虫王），剩余花瓣不再受限，全数围攻。',
   tag:'法术 · 草 · 终结技',
   stages:[
    {xiu:100,mind:20,ling:100,study:15,eff:'可施展《暴雨天菊》：三段 × 15 花瓣，旋转触敌 5% 草伤，索敌 60% 物理 + 45% 草伤'},
@@ -4137,7 +4137,7 @@ function ultCard(u){
   +'</div>'
   +'<div class="cf-brief row" style="margin-top:8px;gap:6px">'
   +'<button class="btn small'+(eq?' on':'')+'" '+(ultOwned(u.id)?'onclick="equipUlt(\''+u.id+'\')"':'disabled')+'>'+(eq?'装备中 ✓':'装备')+'</button>'
-  +'<span class="small">'+fmt(sp.petals)+' 花瓣 / 段 · 段距 '+sp.gap.toFixed(1)+' 秒 · 冷却 '+sp.cd+' 秒 · 耗 '+sp.cost+' 充能</span>'
+  +'<span class="small">'+fmt(sp.petals)+' 花瓣 / 段 · 段距 '+sp.gap.toFixed(1)+' 秒 · 冷却 '+sp.cd+' 秒 · 耗 '+sp.cost+' 充能 · 同敌至多 3 枚锁定</span>'
   +'</div>'
   +'<div class="cf-detail"><div class="flavor">'+u.flavor+'</div>'
   +'<div class="desc">'+u.desc+'</div>'
@@ -5237,7 +5237,7 @@ function btlNearest(x,y,skip,exclude){
 function btlNum(x,y,v,crit,col,txt){
  if(!B.nums)B.nums=[];
  B.nums.push({x:x+(Math.random()-0.5)*26,y:y-6-Math.random()*10,v:Math.round(v),crit:!!crit,
-  col:'#FFFFFF',txt:txt||'',t:0.9,life:0.9,vy:-52});
+  col:col||'#FFFFFF',txt:txt||'',t:0.9,life:0.9,vy:-52});
 }
 function usePojing(){
  if(!S||!(S.inv.pojing>0)){toast('没有破境丹');return;}
@@ -5353,18 +5353,17 @@ function btlDmgPanel(){
 function btlKill(e){
  const i=B.alive.indexOf(e);
  if(i>=0)B.alive.splice(i,1);
- B.killed++;
+ if(!e.noCount)B.killed++; /* v-0.4.3：虫王召来的小蜘蛛不计入关卡怪物数 */
  if(e.boss){
   for(let j=0;j<10;j++){
    const ang=Math.random()*Math.PI*2,rad=80+Math.random()*120;
-   B.alive.push({id:B.id++,kind:'spider',def:{name:'小蜘蛛',hp:1.7,dmg:1.15,spd:118,r:9,melee:120,range:0,color:'#3A3350',dark:'#221E33'},
+   B.alive.push({id:B.id++,kind:'spider',noCount:true,def:{name:'小蜘蛛',hp:1.7,dmg:1.15,spd:118,r:9,melee:120,range:0,color:'#3A3350',dark:'#221E33'},
     x:Math.max(24,Math.min($('btlCv').width-24,e.x+Math.cos(ang)*rad)),
     y:Math.max(34,Math.min($('btlCv').height-34,e.y+Math.sin(ang)*rad)),
     r:9,spd:118,cd:Math.random()*0.8,hp:monHpBase(B.realm)*1.7*0.55,hpMax:monHpBase(B.realm)*1.7*0.55,
     defv:monRefDef(B.realm)*0.8,raw:monAtkBase(B.realm)*1.15*0.7,hitT:0,dotT:0,dotAcc:0,dotDmg:0,elite:false});
-   B.spawned++;
-  }
-  B.bossAtk=0;
+   }
+   B.bossAtk=0;
  }
  if(e.def&&e.def.elite)B.eliteKilled=(B.eliteKilled||0)+1;
  if(S&&S.stats)S.stats.kills=(S.stats.kills|0)+1;
@@ -6053,24 +6052,29 @@ function btlSettle(win,quit){
  S.hp=Math.min(hpMax(),hpEnd);
  S.restUntil=Date.now()+30000;
  B.phase=win?'win':'lose';
- let grade='',gain=0;
+ let grade='',gain=0,noGain=false;
  if(B.plane&&win&&!quit){
   const ratio=(B.p&&B.p.hpMax)?Math.max(0,B.p.hp/B.p.hpMax):1;
   grade=ratio>=0.8?'S':(ratio>=0.6?'A':(ratio>=0.4?'B':'C'));
   const gainN=grade==='S'?4:(grade==='A'?3:(grade==='B'?2:1));
   const cur=planeFlat(),tier=planeTierOf(cur);
   const isBossBoss=(tier.tier===8);
-  gain=isBossBoss?(grade==='S'?2:1):gainN;
-  const curTierEnd=PLANE.slice(0,tier.tier+1).reduce(function(a,b){return a+b.lv;},0)-1;
-  let nx=Math.min(planeMax()-1,cur+gain);
-  if(nx>curTierEnd)nx=Math.min(nx,curTierEnd+1);
-  const toIdx=Math.max(cur,nx);
-  S.plane={idx:toIdx};
-  gain=toIdx-cur; /* v3.4.7：按实际涨的级数记账，到顶时显示 +0，不虚报 */
-  if(tier.tier>=8){
-   const up=(grade==='S')?2:1;
-   S.planeDif=Math.min(planeDifMax(),(S.planeDif|0)+up);
-  }
+  /* v-0.4.3：只认最高关——只有挑战「当前最高档」才升段；回打旧关只拿奖励，段位与主宰难度都不动 */
+  const atTop=((B.pf|0)===cur);
+  if(atTop){
+   gain=isBossBoss?(grade==='S'?2:1):gainN;
+   const curTierEnd=PLANE.slice(0,tier.tier+1).reduce(function(a,b){return a+b.lv;},0)-1;
+   let nx=Math.min(planeMax()-1,cur+gain);
+   if(nx>curTierEnd)nx=Math.min(nx,curTierEnd+1);
+   const toIdx=Math.max(cur,nx);
+   S.plane={idx:toIdx};
+   gain=toIdx-cur; /* v3.4.7：按实际涨的级数记账，到顶时显示 +0，不虚报 */
+   if(tier.tier>=8){
+    const up=(grade==='S')?2:1;
+    S.planeDif=Math.min(planeDifMax(),(S.planeDif|0)+up);
+   }
+  }else noGain=true;
+  S.planePick=planeFlat(); /* 下一场默认从当前最高关起（复战旧关也回到最高） */
   if(B.boss){
    if(Math.random()<0.07)S.inv.pojing=(S.inv.pojing|0)+1;
    if(Math.random()<0.035){
@@ -6083,13 +6087,14 @@ function btlSettle(win,quit){
     }
    }
   }
+  save(); /* v-0.4.3：升段当场落盘，不再等 5 秒自动存档 */
  }
  B.res={win:win,quit:quit,killed:B.killed,xs:xs,ls:ls,yaodan:yaodan,jingdan:jingdan,time:B.time,xd:1,
-  plane:B.plane,grade:grade,gain:gain,planeNow:B.plane?planeLabel():''};
+  plane:B.plane,grade:grade,gain:gain,noGain:noGain,planeNow:B.plane?planeLabel():''};
  updateUI();
  if(typeof renderRing==='function')renderRing();
  logAdd(B.plane
-  ?((win?'✦ 位面通行':'☠ 位面受阻，无功而返')+'（'+planeLabel(B.pf)+' · 评 '+grade+'）：斩妖 '+B.killed+' 只'+(win?('，升段 +'+gain+'，得修为丹 ×1（合 '+fmt(xs)+' 修为），下品灵石 +'+fmt(ls)+'。'):'，未得任何奖励。'))
+  ?((win?'✦ 位面通行':'☠ 位面受阻，无功而返')+'（'+planeLabel(B.pf)+' · 评 '+grade+'）：斩妖 '+B.killed+' 只'+(win?((noGain?'，复战旧地段位不变':'，升段 +'+gain)+'，得修为丹 ×1（合 '+fmt(xs)+' 修为），下品灵石 +'+fmt(ls)+'。'):'，未得任何奖励。'))
   :((win?'✦ 幻境通关':'☠ 幻境止步，无功而返')+'（'+REALMS[B.realm].name+'期 · '+BDIF[B.dif].name+'）：斩妖 '+B.killed+' 只'+(win?('，得修为丹 ×1（合 '+fmt(xs)+' 修为），下品灵石 +'+fmt(ls)+'。'):'，未得任何奖励。')));
  btlShowResult();
 }
@@ -6103,7 +6108,7 @@ function btlShowResult(){
   $('btlResTitle').textContent='位面通行';
   box.innerHTML='<div class="btl-grade '+cls+'"><b>'+r.grade+'</b><i>'+tip+'</i></div>'
    +'<div>斩妖 <b>'+r.killed+'</b> 只 · 用时 '+btlClock(r.time)+'</div>'
-   +'<div>升段 <b>+'+r.gain+'</b> · 下一场从 <b>'+planeLabel(planeFlat())+'</b> 起</div>'
+   +'<div>'+(r.noGain?'复战旧地 · 段位不变（只有挑战当前最高关才升段）':'升段 <b>+'+r.gain+'</b> · 下一场从 <b>'+planeLabel(planeFlat())+'</b> 起')+'</div>'
    +'<div>修为丹 ×1（合 <b>'+fmt(r.xs)+'</b> 修为）· 下品灵石 +'+fmt(r.ls)+'</div>'
    +'<div>妖丹 ×'+r.yaodan+(r.jingdan?(' · 精英妖丹 ×'+r.jingdan):'')+'</div>';
   $('btlRes').classList.add('on');
@@ -6170,7 +6175,26 @@ function btlPetalTick(dt){
    if(pt.orbitT<=0){pt.mode='seek';pt.life=6;}
   }else{
    /* 索敌期：极速追击，中途不散 */
-   if(!pt.tgt||!(pt.tgt.hp>0)||B.alive.indexOf(pt.tgt)<0)pt.tgt=btlNearest(pt.x,pt.y);
+   if(!pt.tgt||!(pt.tgt.hp>0)||B.alive.indexOf(pt.tgt)<0){
+    /* v-0.4.3：同一妖物最多被 3 枚花瓣锁定——花瓣优先找「锁定最少」的妖物，同数时取最近，
+       于是自然摊开；超出的花瓣转投它敌。若场上妖物都已被 3 枚锁满（少怪、单只虫王），
+       剩余花瓣不再受限，直接围攻最近的妖物 */
+    const lockN={};
+    for(const u of B.petals){
+     if(u===pt||!u.tgt)continue;
+     if(!(u.tgt.hp>0))continue;
+     lockN[u.tgt.id]=(lockN[u.tgt.id]||0)+1;
+    }
+    let cand=null,bestL=99,bestD=1e9;
+    for(const e of B.alive){
+     if(!(e.hp>0))continue;
+     const L=lockN[e.id]||0;
+     if(L>=3)continue;
+     const dd=Math.hypot(e.x-pt.x,e.y-pt.y);
+     if(L<bestL||(L===bestL&&dd<bestD)){bestL=L;bestD=dd;cand=e;}
+    }
+    pt.tgt=cand||btlNearest(pt.x,pt.y);
+   }
    if(pt.tgt){
     const dx=pt.tgt.x-pt.x,dy=pt.tgt.y-pt.y,dist=Math.hypot(dx,dy)||1;
     const spd=760;
@@ -6387,14 +6411,13 @@ function btlUpdate(dt){
     const n=3+Math.floor(Math.random()*3);
     for(let j=0;j<n&&B.alive.length<26;j++){
      const ang=Math.random()*Math.PI*2,rad=90+Math.random()*70;
-     B.alive.push({id:B.id++,kind:'spider',def:{name:'小蜘蛛',hp:1.7,dmg:1.15,spd:118,r:9,melee:120,range:0,color:'#3A3350',dark:'#221E33'},
+     B.alive.push({id:B.id++,kind:'spider',noCount:true,def:{name:'小蜘蛛',hp:1.7,dmg:1.15,spd:118,r:9,melee:120,range:0,color:'#3A3350',dark:'#221E33'},
       x:Math.max(20,Math.min($('btlCv').width-20,e.x+Math.cos(ang)*rad)),
       y:Math.max(30,Math.min($('btlCv').height-30,e.y+Math.sin(ang)*rad)),
       r:9,spd:118,cd:Math.random()*0.6,hp:monHpBase(B.realm)*1.7*0.55,hpMax:monHpBase(B.realm)*1.7*0.55,
       defv:monRefDef(B.realm)*0.8,raw:monAtkBase(B.realm)*1.15*0.7,hitT:0,dotT:0,dotAcc:0,dotDmg:0,elite:false});
-     B.spawned++;
-    }
-    B.fx.push({x:e.x,y:e.y,r:e.r+16,t:0.4,col:'#8E6BD8'});
+     }
+     B.fx.push({x:e.x,y:e.y,r:e.r+16,t:0.4,col:'#8E6BD8'});
    }
    if(e.webT<=0){
     e.webT=10;
@@ -6444,7 +6467,10 @@ function btlUpdate(dt){
  if(p.slowT>0)p.slowT=Math.max(0,p.slowT-dt);
  if(B.webs)for(let i=B.webs.length-1;i>=0;i--){B.webs[i].t-=dt;if(B.webs[i].t<=0)B.webs.splice(i,1);}
  if(B.plane&&B.boss){
-  if(!B.orbs||!B.orbs.length){
+  const bossLive=B.alive.find(function(x){return x.boss;});
+  if(!bossLive){
+   if(B.orbs&&B.orbs.length)B.orbs=[];
+  }else if(!B.orbs||!B.orbs.length){
    if(!B.orbNext||Date.now()>=B.orbNext){
     B.orbs=[];B.orbNext=Date.now()+60000;
     const cv3=$('btlCv'),W3=cv3.width,H3=cv3.height;
@@ -6549,7 +6575,7 @@ function btlUpdate(dt){
  }
  /* 胜负 */
  if(p.hp<=0){btlSettle(false,false);return;}
- if(B.killed>=B.total&&!B.alive.length){btlSettle(true,false);return;}
+ if(!B.alive.length&&(B.killed>=B.total||(B.spawned>=B.total&&B.time>1))){btlSettle(true,false);return;}
  if(!LITE || (B.hudAcc||0)>=0.1){B.hudAcc=0;btlHud();}
 }
 function btlEliteGap(){return B.realm>=4?50:25;}
@@ -6573,8 +6599,7 @@ function btlSpawn(){
  const dmgUnit=monAtkBase(ri)*K.atk;
  const defUnit=monRefDef(ri)*K.def;
  let kind;
- if(B.plane&&B.boss){
-  if(B.bossSpawned)return;
+ if(B.plane&&B.boss&&!B.bossSpawned){
   B.bossSpawned=true;
   const dd=MON.boss,cv2=$('btlCv'),W2=cv2.width,H2=cv2.height;
   B.alive.push({id:B.id++,kind:'boss',def:dd,boss:true,x:Math.round(W2/2),y:Math.round(H2*0.28),r:dd.r,
@@ -7206,7 +7231,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.4.1';
+const BUILD = '0.4.3';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
