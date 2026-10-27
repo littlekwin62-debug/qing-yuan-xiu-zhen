@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.3.8 · 联网道友</title>
+<title>青元修真 · 测试版 v-0.4.1 · 钉落无声</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -447,7 +447,10 @@ footer{color:#5E7592;letter-spacing:1px}
 .nail-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;cursor:pointer;user-select:none;transform-origin:50% 40%}
 .nail-wrap svg{display:block;filter:drop-shadow(0 0 6px rgba(120,200,255,.55))}
 .nail-cnt{font-size:10px;letter-spacing:.06em;color:#BEE8FF;margin-top:-6px;text-shadow:0 0 6px rgba(120,200,255,.6)}
-.orb-pct.nailed{transform:translateY(-4px)}
+#orbWrap.nailed #orbRealm,#orbWrap.nailed #xiuweiNum{display:none}
+.orb-pct.nailed{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;height:100%;transform:none;pointer-events:auto}
+.nail-wrap{pointer-events:auto;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.nail-wrap svg{width:84px;height:84px}
 #orbWrap.nailed #xiuweiNum{display:none}
 #orbWrap.nailed #rateNum{color:#9EC8E8}
 .nail-wrap.tap svg{animation:nailTap .16s ease-out}
@@ -814,7 +817,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.3.8 — 联网道友</div>
+      <div class="sub">测试版 v-0.4.1 — 钉落无声</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -866,7 +869,7 @@ footer{color:#5E7592;letter-spacing:1px}
       <li>简洁卡：功法、心法、武技、灵能科技、洞府、丹药、法宝的条目默认只显示品级、等级进度条与升级/使用按钮，点右上「详情 ▾」展开说明、数值与故事，再点「收起 ▴」折回。等级进度条会从旧值线性增长到新值。</li>
       <li>洞府：筑基期解锁【凡·灵田】（5级，每级下品灵石+30%）与【低级聚灵阵】（10级，每级修为+12%）。《混元一气功》参悟至「融会贯通」后，可在洞府凝炼【混沌万法灵珠】：上限 10 枚，每枚 +11% 修为效率、+2.5% 攻/防/精上限、+0.25% 暴击率、+1.4% 暴击伤害；「完全掌握」后每枚效果翻倍，十枚全满即 +220% 修为、+50% 五维。</li>
       <li>五维属性：攻击、防御、精神、暴击率、暴击伤害，基础 5 / 5 / 100 / 2% / 75%；已接入拟态战斗，直接影响普攻伤害、减伤与暴击。</li>
-      <li>武技：与功法/心法/战斗同级的第四个修炼板块。每门武技分入门、小成、大成、融会贯通、完全掌握五段，参悟消耗修为与精神力（《分裂剑》百点修为起，灵石自千枚递至八万八千，精神力五十至九十）。最多装配两门，分列技能球 1 / 2；《分裂剑》这类连射型点技能球可切换「自动释放」（每 7 秒一次，受精神力限制）与手动，《青元护身阵》这类持续型则点一下开阵、再点收势（阵内每秒 -5 点精神力，阵外精神照常回复）；键盘 Q 放终结技、F 与 E 对应两门武技；点击画面任意处亦可补一次普攻，仅重置普攻计时、不叠加频率。</li>
+      <li>武技：与功法/心法/战斗同级的第四个修炼板块（分「武技」「终结技」两个页签）。每门武技分入门、小成、大成、融会贯通、完全掌握五段，参悟消耗修为与精神力（《分裂剑》百点修为起，灵石自千枚递至八万八千，精神力五十至九十）。最多装配两门，分列技能球 1 / 2；《分裂剑》这类连射型点技能球可切换「自动释放」（每 7 秒一次，受精神力限制）与手动，《青元护身阵》这类持续型则点一下开阵、再点收势（阵内每秒 -5 点精神力，阵外精神照常回复）；键盘 Q 放终结技、F 与 E 对应两门武技；点击画面任意处亦可补一次普攻，仅重置普攻计时、不叠加频率。</li>
      <li>拟态战斗：与功法/心法同级的战斗板块，以神识入幻境闯关。可选与自身境界相称的副本（锻体起每境一关，妖物 50 只起、每境 +50），四档难度只改妖物数量（各 +30）与刷新速度（各 ×1.25）。主角为按设定重绘的程序化 Q 版小人（头、躯干、双手、双腿各自成节，行走有奔跑摆动、出招有挥击与起跳，终结技时双臂张开、脚下浮现法阵；命中妖物会闪白并弹一下），WASD / 方向键移动；普攻每 0.5 秒一发，剑修出剑气、丹修放丹气、体修挥拳风，自动追敌，每命中积 1 点充能；充能满 60 可放终结技，扣当前精神力的 50 点（不扣上限），2 秒内连发 40 道橙红气象（最近三敌轮流承接、角度微散），每击中回 1 点气血；普攻与终结技的剑气／丹气／拳风若失去目标，会自动改追最近的妖物；分裂剑的子剑气则会先绽开、再索敌、最后命中，且优先挑别的妖物。战斗右侧信息栏会按伤害来源（普攻 / 终结技 / 各门武技，含武技的裂伤）统计本局累计总伤并降序排列，所有伤害均为物理伤害、飘字一律白字。精英怪每 25 只刷一只（金丹及以上每 50 只）；被击中后 0.5 秒内免疫伤害并被击退一段距离。战果给修为丹、下品灵石与妖丹：修为不再直接注入，而是凝成一枚「修为丹」存进储物戒（单枚修为按当前境界上限的 12% 计，且不超过 60 秒挂机收益），要变强得自己去戒里服用——戒页顶部有「一键服用修为丹」，也可逐枚服用；修为丹不可卖、回收点也不收。挑战失败（含中途退出）不发放任何奖励，只有斩妖战绩与战评记入统计。</li>
       <li>下品灵石银行：可存取下品灵石，每 10 分钟结算一次利息，利率在 0.02%–0.99% 之间随机波动，并绘制波动曲线；存款与利息都不受心魔/红尘影响。</li>
       <li>灵石品阶：下品、中品、上品、极品、完美，1 亿低阶可换 1 高阶，也可按 1:1 亿换回。</li>
@@ -886,7 +889,7 @@ footer{color:#5E7592;letter-spacing:1px}
           <div class="orb-stage">
             <div class="orb-ring"></div>
             <div class="orb-ring r2"></div>
-            <div class="orb" id="orb" onclick="clickBreak()" title="修为圆满后可突破">
+            <div class="orb" id="orb" onclick="orbTap()" title="修为圆满后可突破">
               <div class="orb-liquid" id="orbFill"></div>
               <div class="orb-grid"></div>
               <div class="orb-shine"></div>
@@ -1227,8 +1230,8 @@ const GONGFA=[
   lvMax:6,costs:[25000000,40000000,63000000,100000000,158000000,250000000],
   mindCosts:[25,40,63,100,158,250],mindFlat:100,mindRegen:2,xiuPctPerLv:0.40},
  {id:'归元诀',name:'归元诀',grade:'二品下',border:'white',flavor:'灵气归元，万千归一，塑炼我吧灵气酱~',
-  desc:'可修炼 9 级：每级修为增长速度白值 +10000/秒。',
-  lvMax:9,costs:[30000000,40000000,53000000,71000000,95000000,126000000,168000000,224000000,300000000],flatXiu:10000},
+  desc:'元婴期可修。可修炼 9 级：每级修为增长速度白值 +10000/秒（满级 +9 万/秒）。首级 1.7 亿下品灵石，满级 17.2 亿，累计约 63 亿。',
+  lvMax:9,unlock:6,costs:[170000000,227000000,303000000,405000000,541000000,723000000,966000000,1290000000,1720000000],flatXiu:10000},
  {id:'qixue1',name:'气血古典·上篇',grade:'一品上',border:'gray',
   flavor:'气为血之帅，血为气之母；气行则血行。',
   desc:'可修炼 9 级：每级气血回复 +0.30% 气血上限/秒（满级 2.70%/秒）。筑基期可修。',
@@ -1318,8 +1321,8 @@ const XINFA={
   desc:'化神期可参悟。炼神还虚，每层修为获取 +3.8%（满级 +45.6%）。首级 1.05 亿修为，满级累计约 90 亿修为。'},
  wuji:{name:'无极归元典',grade:'三品上',border:'green',flavor:'万法归根，无极复始；一念无量，一息千年。',maxLevel:13,baseCost:1050000000,costMul:1.31,perLevel:0.042,unlock:8,
   desc:'大乘期可参悟。万法归元，每层修为获取 +4.2%（满级 +54.6%）。首级 10.5 亿修为，满级累计约 1100 亿修为。'},
- daode:{name:'道德经',grade:'二品上',border:'white',flavor:'人法地，地法天，天法道，道法自然。',maxLevel:12,baseCost:30000000,costMul:1.312,flat:108,
-  desc:'每级角色基础修为速度 +108/秒（白值）；12 级满级 +1296/秒。首级 3000万修为，满级累计约 5.5亿修为。'},
+ daode:{name:'道德经',grade:'二品上',border:'white',flavor:'人法地，地法天，天法道，道法自然。',maxLevel:12,baseCost:4500000,costMul:1.10,perLevel:0.03,unlock:4,
+  desc:'假丹期可参悟。每层修为获取 +3.0%（12 级满 +36.0%）。首级 450 万修为，满级累计约 9600 万修为。'},
  shenshi:{name:'神识法',grade:'三品下',border:'green',flavor:'神藏于识，识动则气随。',maxLevel:20,baseCost:60000,costMul:1.42,flatMind:150,
   desc:'锻体至元婴皆可参悟。只增益精神力上限（产出）：每级 +150 点，满级 +3000 点；用修为购买，首级 6 万，满级累计约 3.4 亿。'}
 };
@@ -1526,7 +1529,7 @@ function fresh(){
   xinfa:{rendao:0,yinqi:0,shenshi:0},pouch:['','',''],
   tech:{},
   inv:{},
-  wuji:{},wujiSlot:[null,null],study:null,
+  wuji:{},wujiSlot:[null,null],ult:{},ultEq:null,study:null,
   hunyuan:{stage:0},
   hongchen:{stage:0},
   high:[0,0,0,0],
@@ -1730,6 +1733,7 @@ function capFor(r,s){
 function xiuHardCap(){return Infinity;}
 /* 当前修为可连破几层小境界（不含大境界） */
 function breakLayers(){
+ if(S.realm>=6)return 1;   /* 元婴及以上不再连破 */
  if(!S)return 0;
  let n=0,rest=S.xiuwei,sub=S.sub;
  while(sub<8&&rest>=capFor(S.realm,sub)-1e-6){rest-=capFor(S.realm,sub);sub++;n++;}
@@ -2094,6 +2098,13 @@ function startNail(){
  toast('判罚之钉降临！点修为球上的钉子叩 '+S.nail.need+' 次解封');
  save();updateUI();renderTabs();
 }
+function orbTap(){
+ if(typeof nailActive==="function"&&nailActive()){
+  if(nailPhase()==="hit"){nailClick();}else{toast("钉子已崩解，天道正在收手");}
+  return;
+ }
+ clickBreak();
+}
 function nailClick(){
  if(!S||!S.nail||!S.nail.need)return;
  if(nailPhase()!=='hit')return;
@@ -2153,12 +2164,15 @@ function maybeNail(){
 }
 function clickBreak(){
  if(!S)return;
+ if(typeof nailActive==="function"&&nailActive()){nailClick();return;}
  if(unstableOn()){toast('气息不稳，此刻冲关必遭反噬，待气息平复');return;}
  if(!isFull()){toast('修为尚未圆满，无法突破');return;}
  const R=REALMS[S.realm];
  /* 小境界连破：只要修为够，一路推到九层 */
  let layers=0;
+ const oneStep=S.realm>=6;   /* 元婴及以上：一回只破一层 */
  while(S.sub<8){
+  if(oneStep&&layers>=1)break;
   const need=capFor(S.realm,S.sub);
   if(S.xiuwei<need-1e-6)break;
   S.xiuwei-=need;S.sub++;layers++;
@@ -3197,7 +3211,7 @@ function tipHTML(kind){
  const now=Date.now();
  if(kind==='study'){
   if(studyOn()){
-   const sd=S.study.id?wujiDef(S.study.id):null;
+   const sd=studyNameOf(S.study);
    return '<b>钻研中</b><br>沉心体悟武技，心神外用：修为产出 ×0.25（-75%）、精神力回复 ×0.85（-15%）<br>'
     +'正在钻研：'+(sd?'《'+sd.name+'》第 '+S.study.lv+' 段':'武技')+'<br>剩余 '+fmtClock(S.study.until-now)+'，圆满后自动进阶';
   }
@@ -3329,7 +3343,7 @@ function updateUI(){
   const sig=np+':'+S.nail.hits+':'+S.nail.need;
   if(box.dataset.sig!==sig){
    box.dataset.sig=sig;
-   box.innerHTML='<div class="nail-wrap" id="nailWrap" onclick="nailClick()" title="点击叩击判罚之钉">'
+   box.innerHTML='<div class="nail-wrap" id="nailWrap" title="点击叩击判罚之钉">'
     +nailSVG()
     +'<div class="nail-cnt">'+(np==='hit'?(S.nail.hits+' / '+S.nail.need+' 叩'):'天道收手 '+Math.max(0,Math.ceil((S.nail.until-Date.now())/1000))+'s')+'</div></div>';
   }else{
@@ -3427,7 +3441,7 @@ function updateUI(){
  $('chipStudy').style.display=studyOnNow?'':'none';
  $('chipStudy').classList.toggle('on',studyOnNow);
  if(studyOnNow){
-  const sd=S.study.id?wujiDef(S.study.id):null;
+  const sd=studyNameOf(S.study);
   $('chipStudy').textContent='✎ 钻研·'+(sd?sd.name:'武技')+' '+fmtClock(S.study.until-now);
  }
  const wsn=$('wjStudyNote');
@@ -3856,6 +3870,74 @@ const WUJI=[
   ]}
 ];
 const WUJI_STAGE=['入门','小成','大成','融会贯通','完全掌握'];
+
+/* ---------- 终结技（武技页签 · 终结技） ---------- */
+const ULTS=[
+ {id:'baoyu',name:'暴雨天菊',grade:'三品上',border:'green',
+  flavor:'「菊开一瞬，雨落千瓣。」',
+  desc:'以自身为蕊，连放三段暴雨天菊绕身旋转；每段 15 枚花瓣，段与段之间隔 2 秒。旋转 1.8 秒内触敌即伤（草属，攻击力 5%），此间命中不积充能；旋转毕，花瓣极速索敌，中途不散，命中造成攻击力 60% 物理 + 45% 草属，并积 0.8 充能。草属伤害会使妖物「染草」1 秒（元素反应将在后续版本接入）。',
+  tag:'法术 · 草 · 终结技',
+  stages:[
+   {xiu:100,mind:20,ling:100,study:15,eff:'可施展《暴雨天菊》：三段 × 15 花瓣，旋转触敌 5% 草伤，索敌 60% 物理 + 45% 草伤'},
+   {xiu:800,mind:25,ling:1000,study:20,eff:'每段花瓣 15 → 20 枚'},
+   {xiu:1200,mind:50,ling:3000,study:35,eff:'旋转期草属伤害 5% → 9%'},
+   {xiu:2000,mind:60,ling:5000,study:50,eff:'段间隔 2.0 → 1.3 秒'},
+   {xiu:3500,mind:90,ling:8888,study:70,eff:'索敌伤害 60%+45% → 80% 物理 + 60% 草属'}
+  ]}
+];
+const ULT_ID='baoyu';
+function ultDef(id){for(const u of ULTS)if(u.id===id)return u;return null;}
+function ultLv(id){return (S&&S.ult&&S.ult[id])|0;}
+function ultOwned(id){return ultLv(id)>0;}
+function ultEq(){return (S&&S.ultEq)||null;}
+function baoyuSpec(){
+ const lv=ultLv(ULT_ID);
+ return {lv:lv,waves:3,petals:lv>=2?20:15,orbit:1.8,gap:lv>=4?1.3:2.0,
+  orbitPct:lv>=3?0.09:0.05,phyPct:lv>=5?0.80:0.60,grassPct:lv>=5?0.60:0.45,
+  cd:15,cost:60};
+}
+function ultCanUp(u){
+ const lv=ultLv(u.id);
+ if(lv>=u.stages.length)return false;
+ if(studyOn())return false;
+ const st=u.stages[lv];
+ return S.xiuwei>=st.xiu&&S.mind>=st.mind&&S.lingshi>=st.ling;
+}
+function ultCostText(u,lv){
+ const st=u.stages[lv];
+ if(!st)return '—';
+ return fmt(st.xiu)+' 修为 + '+st.mind+' 精神力 + '+fmt(st.ling)+' 下品灵石';
+}
+function startUltStudy(id){
+ const def=ultDef(id);
+ if(!def)return;
+ const lv=ultLv(id);
+ if(lv>=def.stages.length){toast('《'+def.name+'》已至「完全掌握」');return;}
+ if(studyOn()){
+  toast('正在钻研《'+studyNameOf(S.study)+'》，须待其圆满');
+  return;
+ }
+ const st=def.stages[lv];
+ if(S.xiuwei<st.xiu){toast('修为不足（需 '+fmt(st.xiu)+' 修为）');return;}
+ if(S.mind<st.mind){toast('精神力不足（需 '+st.mind+' 点）');return;}
+ if(S.lingshi<st.ling){toast('下品灵石不足（需 '+fmt(st.ling)+'）');return;}
+ S.xiuwei-=st.xiu;S.mind-=st.mind;S.lingshi-=st.ling;
+ S.study={id:id,lv:lv+1,until:Date.now()+st.study*1000,kind:'ult'};
+ toast('入定钻研《'+def.name+'》，'+st.study+' 秒后「'+WUJI_STAGE[lv]+'」圆满');
+ logAdd('✦ 你沉心钻研《'+def.name+'》（终结技），入「钻研」状态：修为增速 -75%、精神力回复 -15%，历时 '+st.study+' 秒。');
+ updateUI();renderTabs();save();
+}
+function equipUlt(id){
+ if(!ultOwned(id)){toast('尚未参悟此终结技');return;}
+ if(ultEq()===id){S.ultEq=null;toast('已卸下终结技《'+ultDef(id).name+'》，战斗恢复「四十道气象」');}
+ else{S.ultEq=id;toast('终结技已换为《'+ultDef(id).name+'》');}
+ updateUI();renderTabs();save();
+}
+function studyNameOf(st){
+ if(!st)return '';
+ const d=(st.kind==='ult')?ultDef(st.id):wujiDef(st.id);
+ return d?d.name:'';
+}
 function wujiDef(id){return WUJI.find(function(w){return w.id===id;});}
 function wujiLv(id){return (S&&S.wuji&&(S.wuji[id]|0))||0;}
 function wujiOwned(id){return wujiLv(id)>0;}
@@ -3878,15 +3960,26 @@ function startStudy(id){
  if(S.mind<st.mind){toast('精神力不足（需 '+st.mind+' 点）');return;}
  if(S.lingshi<st.ling){toast('下品灵石不足（需 '+fmt(st.ling)+'）');return;}
  S.xiuwei-=st.xiu;S.mind-=st.mind;S.lingshi-=st.ling;
- S.study={id:id,lv:lv+1,until:Date.now()+st.study*1000};
+ S.study={id:id,lv:lv+1,until:Date.now()+st.study*1000,kind:'wuji'};
  toast('入定钻研《'+def.name+'》，'+st.study+' 秒后「'+WUJI_STAGE[lv]+'」圆满');
  logAdd('✦ 你沉心钻研《'+def.name+'》，入「钻研」状态：修为增速 -75%、精神力回复 -15%，历时 '+st.study+' 秒。');
  updateUI();renderTabs();save();
 }
 function finishStudy(){
  if(!S||!S.study)return;
- const id=S.study.id,lv=S.study.lv;
+ const id=S.study.id,lv=S.study.lv,kind=S.study.kind||'wuji';
  S.study=null;
+ if(kind==='ult'){
+  if(!S.ult)S.ult={};
+  const ud=ultDef(id);
+  S.ult[id]=lv;
+  const un=WUJI_STAGE[Math.min(lv-1,WUJI_STAGE.length-1)];
+  toast('《'+(ud?ud.name:'终结技')+'》'+un+'圆满！');
+  logAdd('◆ 钻研有成，《'+(ud?ud.name:'终结技')+'》已达「'+un+'」。');
+  if(!S.ultEq)S.ultEq=id;
+  updateUI();renderTabs();save();
+  return;
+ }
  if(!S.wuji)S.wuji={};
  const def=wujiDef(id);
  S.wuji[id]=lv;
@@ -3995,14 +4088,21 @@ function wujiCard(w){
  return h;
 }
 
+let wujiSub='Art';
+function switchWujiSub(n){wujiSub=n;renderWuji();}
 function renderWuji(){
  const box=$('tabWuji');
  if(!box)return;
+ const _sub='<div class="subbar">'
+  +'<button class="btn sub-btn'+(wujiSub==='Art'?' on':'')+'" onclick="switchWujiSub(\'Art\')">武技</button>'
+  +'<button class="btn sub-btn'+(wujiSub==='Ult'?' on':'')+'" onclick="switchWujiSub(\'Ult\')">终结技</button>'
+  +'</div>';
+ if(wujiSub==='Ult'){box.innerHTML=_sub+renderUltPanel();return;}
  const slots=wujiSlots();
  const nm=function(id){const w=id?wujiDef(id):null;return w?('《'+w.name+'》'+(wujiLv(id)?WUJI_STAGE[wujiLv(id)-1]:'')):'空';};
- let h='<div class="wj-head"><div class="wj-k">ARTS · 武技</div>'
+ let h=_sub+'<div class="wj-head"><div class="wj-k">ARTS · 武技</div>'
   +'<div class="wj-t">剑诀 · 拳意 · 丹法</div>'
-  +'<div class="wj-d">武技与功法同源而异用：参悟需入「钻研」状态（修为增速 -75%、精神回复 -15%），钻研圆满方得进阶。修成之后装配于武技1 / 武技2：分裂剑类冷却（7 秒）一满自动施展，同一目标 0.4 秒内最多承受 2 道剑气、其余转攻它敌，但场上仅剩一只妖时全部剑气尽归于它；护身阵类为持续阵法，在战斗中随时以「壹 / 贰」或 E / F 开合，运转期间每秒耗神。法阵类（八卦法阵）为阵地技：冷却一满即在场上随机落点结阵，阵成之后不随人移动，须靠走位把妖物引进阵中。</div>'
+  +'<div class="wj-d">武技与功法同源而异用：参悟需入「钻研」状态（修为增速 -75%、精神回复 -15%），钻研圆满方得进阶。修成之后装配于武技1 / 武技2：分裂剑类冷却（7 秒）一满自动施展，同一目标 0.4 秒内最多承受 2 道剑气、其余转攻它敌，但场上仅剩一只妖时全部剑气尽归于它；护身阵类为持续阵法，在战斗中随时以「壹 / 贰」或 E / F 开合，运转期间每秒耗神。法阵类（八卦法阵）为阵地技：冷却一满即在场上随机落点结阵，阵成之后不随人移动，须靠走位把妖物引进阵中。『终结技』页签另成一系：不占武技槽，一场只装一门，满 60 充能方可施展。</div>'
   +'<div class="wj-slot"><span>装配</span><b>武技1：'+nm(slots[0])+'</b><b>武技2：'+nm(slots[1])+'</b>'
   +'<em id="wjStudyNote"></em>'
   +'</div></div>';
@@ -4016,7 +4116,49 @@ function renderWuji(){
  box.innerHTML=h||'<div class="desc">暂无武技</div>';
 }
 
-function renderGongfa(){
+function ultCard(u){
+ const lv=ultLv(u.id);
+ const max=lv>=u.stages.length;
+ const canUp=ultCanUp(u);
+ const eq=ultEq()===u.id;
+ const key='ult:'+u.id;
+ const sp=baoyuSpec();
+ let h='<div class="card gf-card gf-'+u.border+(canUp?' breathe':'')+cardCls(key)+'" data-card="'+key+'">'
+  +'<div class="row"><span class="gname">《'+u.name+'》'+gradeTag(u)+'</span>'
+  +(max?'<span class="tag owned">完全掌握</span>'
+   :(lv>0?'<span class="tag lock" style="border-color:rgba(212,178,106,.5);color:#e9cd8c">'+WUJI_STAGE[lv-1]+'</span>'
+    :'<span class="tag lock">未参悟</span>'))
+  +cfTog(key)+'</div>'
+  +lvbar(key,lv,u.stages.length)
+  +'<div class="cf-brief row" style="margin-top:8px;gap:8px">'
+  +(max?'<span class="small">已至圆满</span>'
+   :'<span class="small">参悟需 '+ultCostText(u,lv)+' · '+u.stages[lv].study+' 秒</span>'
+    +'<button class="btn small" onclick="startUltStudy(\''+u.id+'\')">参悟</button>')
+  +'</div>'
+  +'<div class="cf-brief row" style="margin-top:8px;gap:6px">'
+  +'<button class="btn small'+(eq?' on':'')+'" '+(ultOwned(u.id)?'onclick="equipUlt(\''+u.id+'\')"':'disabled')+'>'+(eq?'装备中 ✓':'装备')+'</button>'
+  +'<span class="small">'+fmt(sp.petals)+' 花瓣 / 段 · 段距 '+sp.gap.toFixed(1)+' 秒 · 冷却 '+sp.cd+' 秒 · 耗 '+sp.cost+' 充能</span>'
+  +'</div>'
+  +'<div class="cf-detail"><div class="flavor">'+u.flavor+'</div>'
+  +'<div class="desc">'+u.desc+'</div>'
+  +'<div class="desc">当前：'+(lv>0?u.stages[lv-1].eff:'尚未参悟，尚不可施展')+'</div>'
+  +(max?'':'<div class="desc">下一阶「'+WUJI_STAGE[lv]+'」：'+u.stages[lv].eff+'</div>')
+  +'<div class="wj-stages">'+u.stages.map(function(st,i){return '<div class="wj-stage'+(i<lv?' done':'')+'"><b>'+WUJI_STAGE[i]+'</b><em>'+st.eff+'</em><i>'+st.study+' 秒 · '+fmt(st.xiu)+' 修为</i></div>';}).join('')+'</div></div>'
+  +'</div>';
+ return h;
+}
+function renderUltPanel(){
+ const eq=ultEq();
+ const eqn=eq?ultDef(eq):null;
+ let h='<div class="wj-head"><div class="wj-k">FINISHER · 终结技</div>'
+  +'<div class="wj-t">充能既满，一击定局</div>'
+  +'<div class="wj-d">终结技与武技同属「钻研」体系，但走的是另一条路：不占武技槽，一场只装一门。战斗中每命中一次积 1 点充能（伤害充能另计），满 60 点方可施展，施展后充能清零。当前终结技：'+(eqn?'《'+eqn.name+'》'+(ultLv(eq)?' · '+WUJI_STAGE[Math.min(ultLv(eq)-1,4)]:''):'「四十道气象」（默认）')+'。</div>'
+  +'<div class="wj-slot"><span>装配</span><b>'+(eqn?'终结技：《'+eqn.name+'》':'终结技：四十道气象（默认）')+'</b><em id="wjStudyNote"></em></div></div>';
+ for(const u of ULTS)h+=ultCard(u);
+ return h;
+}
+
+ function renderGongfa(){
  const box=$('tabGongfa');
  let h='';
  for(const grp of gradeGroups(GONGFA)){
@@ -4058,6 +4200,7 @@ function renderArt(){
  if(!box)return;
  let h='<div class="desc" style="margin-bottom:8px">持有：下品灵石 '+fmt(S.lingshi)+' · 修为 '+fmt(S.xiuwei)+'　（法宝购入后存入储物戒 · 法宝页装配后生效）</div><div class="dan-grid">';
  for(const a of ARTIFACTS){
+  if(a.drop)continue;   /* 虫王掉落类法宝：坊市不出售 */
   const owned=fabaoOwned(a.id);
   const eq=owned&&isEquipped(a.id);
   const key='art:'+a.id;
@@ -4849,6 +4992,9 @@ function migrateS(){
    while(S.wujiSlot.length<2)S.wujiSlot.push(null);
    S.wujiSlot=S.wujiSlot.slice(0,2);
    if(S.study&&!(S.study.until>0))S.study=null;
+   if(!S.ult||typeof S.ult!=='object')S.ult={};
+   if(S.ultEq===undefined)S.ultEq=null;
+   if(S.ultEq&&!ultDef(S.ultEq))S.ultEq=null;
    if(!Array.isArray(S.high))S.high=[0,0,0,0];
    for(let i=0;i<4;i++)S.high[i]=Math.max(0,S.high[i]|0);
    S.bank=Object.assign({dep:0,earned:0,rate:0,next:0,hist:[]},S.bank);
@@ -5146,8 +5292,15 @@ function btlCycleWj(i){
  const owned=WUJI.filter(function(w){return wujiOwned(w.id);}).map(function(w){return w.id;});
  const pool=[''].concat(owned);
  const cur=wujiSlots()[i]||'';
- const idx=pool.indexOf(cur);
- wujiSlots()[i]=pool[(idx+1)%pool.length]||null;
+ const other=wujiSlots()[1-i]||'';
+ let idx=pool.indexOf(cur);
+ let next=null;
+ for(let k=1;k<=pool.length;k++){
+  const cand=pool[(idx+k)%pool.length]||null;
+  if(cand&&cand===other)continue;   /* 不可同时带两个相同武技 */
+  next=cand;break;
+ }
+ wujiSlots()[i]=next;
  save();btlToSelect();
 }
 function btlRefreshPouch(){
@@ -5815,9 +5968,9 @@ function btlStart(){
  B.weak=weakOn?60:0;
  B.p={x:0,y:0,tx:0,ty:0,tap:false,r:15,hp:hp0,hpMax:hpMax(),
   atk:Math.max(1,A.atk*(weakOn?0.7:1)),def:Math.max(0,A.def*(weakOn?0.7:1)),
-  crit:A.crit,critDmg:A.critDmg,cd:0,energy:0,ultQ:0,inv:1.4,x:0,y:0,vx:0,vy:0,
+  crit:A.crit,critDmg:A.critDmg,cd:0,energy:0,ultQ:0,ultCd:0,inv:1.4,x:0,y:0,vx:0,vy:0,
   animT:0,atkAnim:0,ultAnim:0,moving:false,px:0,py:0,wjCd:[0,0],hs:{on:false,t:0}};
- B.nums=[];B.auto=[true,true];B.burst=null;B.pouchCd=[0,0,0];B.bags=[];
+ B.nums=[];B.auto=[true,true];B.burst=null;B.pouchCd=[0,0,0];B.petals=[];B.bao={t:0,waves:0,on:false};B.bags=[];
  B.hpMax0=B.p.hpMax;B.atk0=B.p.atk;B.def0=B.p.def;
  const cy=Math.round($('btlCv').height*0.62);
  B.p.y=cy;B.p.x=Math.round($('btlCv').width/2);
@@ -5971,9 +6124,94 @@ function btlClock(t){
  const s=Math.floor(t);
  return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);
 }
+function btlSpawnPetals(sp){
+ const n=sp.petals;
+ for(let i=0;i<n;i++){
+  const ang=Math.PI*2*i/n;
+  B.petals.push({ang:ang,rad:78,orbitT:sp.orbit,mode:'orbit',x:B.p.x,y:B.p.y,
+   orbitPct:sp.orbitPct,phyPct:sp.phyPct,grassPct:sp.grassPct,
+   spin:1.9,life:8,cdHit:0,tgt:null,t:0});
+ }
+}
+function btlPetalTick(dt){
+ if(!B.p)return;
+ const sp=baoyuSpec();
+ /* 分段生成 */
+ if(B.bao&&B.bao.on){
+  B.bao.t+=dt;
+  const want=Math.min(sp.waves,1+Math.floor(B.bao.t/sp.gap+1e-6));
+  while(B.bao.waves<want){B.bao.waves++;btlSpawnPetals(sp);}
+  if(B.bao.waves>=sp.waves&&(!B.petals||!B.petals.length))B.bao.on=false;
+ }
+ if(!B.petals||!B.petals.length)return;
+ const p=B.p;
+ for(let i=B.petals.length-1;i>=0;i--){
+  const pt=B.petals[i];
+  pt.t+=dt;
+  if(pt.cdHit>0)pt.cdHit-=dt;
+  if(pt.mode==='orbit'){
+   pt.ang+=pt.spin*dt;
+   const R=78+Math.sin(pt.t*2.2)*4;
+   pt.x=p.x+Math.cos(pt.ang)*R;
+   pt.y=p.y+Math.sin(pt.ang)*R;
+   /* 旋转期：触碰即伤，且不给充能 */
+   for(const e of B.alive){
+    if(!(e.hp>0))continue;
+    if(Math.hypot(e.x-pt.x,e.y-pt.y)>e.r+8)continue;
+    if(pt.cdHit>0)continue;
+    const d=Math.max(1,p.atk*pt.orbitPct*p.atk/(p.atk+e.defv));
+    e.hp-=d;e.hitT=0.12;e.hitPop=1;e.grassT=1.0;
+    btlAcc('暴雨天菊',d);
+    btlNum(pt.x+(Math.random()-0.5)*10,pt.y-6,d,false,'#7FD86B');
+    pt.cdHit=0.18;
+    if(e.hp<=0){btlKill(e);break;}
+   }
+   pt.orbitT-=dt;
+   if(pt.orbitT<=0){pt.mode='seek';pt.life=6;}
+  }else{
+   /* 索敌期：极速追击，中途不散 */
+   if(!pt.tgt||!(pt.tgt.hp>0)||B.alive.indexOf(pt.tgt)<0)pt.tgt=btlNearest(pt.x,pt.y);
+   if(pt.tgt){
+    const dx=pt.tgt.x-pt.x,dy=pt.tgt.y-pt.y,dist=Math.hypot(dx,dy)||1;
+    const spd=760;
+    pt.x+=dx/dist*spd*dt;pt.y+=dy/dist*spd*dt;
+    if(dist<pt.tgt.r+9){
+     const e=pt.tgt;
+     const dp=Math.max(1,p.atk*pt.phyPct*p.atk/(p.atk+e.defv));
+     const dg=Math.max(1,p.atk*pt.grassPct*p.atk/(p.atk+e.defv));
+     e.hp-=dp+dg;e.hitT=0.16;e.hitPop=1;e.grassT=1.0;
+     btlAcc('暴雨天菊',dp+dg);
+     btlNum(e.x-20,e.y-e.r-16,dp,false);
+     btlNum(e.x+20,e.y-e.r-4,dg,false,'#7FD86B');
+     if(p.energy<60)p.energy=Math.min(60,p.energy+0.8);
+     B.fx.push({x:e.x,y:e.y,r:12,t:0.26,col:'#BEF08A'});
+     B.petals.splice(i,1);
+     if(e.hp<=0)btlKill(e);
+     continue;
+    }
+   }else{
+    pt.x+=Math.cos(pt.ang)*40*dt;pt.y+=Math.sin(pt.ang)*40*dt;
+   }
+   pt.life-=dt;
+   if(pt.life<=0)B.petals.splice(i,1);
+  }
+ }
+}
 function btlUlt(){
  if(B.phase!=='run'||!B.p)return;
  if(B.weak&&B.weak>0){toast('虚弱之中，凝不起终结技');return;}
+ const _eq=ultEq();
+ if(_eq==='baoyu'&&ultOwned('baoyu')){
+  const sp=baoyuSpec();
+  if(B.p.ultCd>0){toast('《暴雨天菊》冷却中（'+Math.ceil(B.p.ultCd)+' 秒）');return;}
+  if(B.p.energy<sp.cost){toast('充能不足（'+Math.floor(B.p.energy)+'/'+sp.cost+'）');return;}
+  B.p.energy=0;B.p.ultCd=sp.cd;B.petals=[];B.bao={t:0,waves:0,on:true};
+  B.fx.push({x:B.p.x,y:B.p.y,r:86,t:0.5,col:'#F2D06B'});
+  B.fx.push({x:B.p.x,y:B.p.y,r:52,t:0.38,col:'#BEF08A'});
+  toast('终结技 · 暴雨天菊：三段花瓣绕身而起');
+  updateUI();
+  return;
+ }
  if(B.p.energy<60){toast('充能不足（'+Math.floor(B.p.energy)+'/60）');return;}
  if(S.mind<50){toast('精神力不足（需 50 点）');return;}
  S.mind=Math.max(0,S.mind-50);
@@ -6167,6 +6405,7 @@ function btlUpdate(dt){
   }
   const dx=p.x-e.x,dy=p.y-e.y,d=Math.hypot(dx,dy)||1;
   if((e.bagSlow||0)>0)e.bagSlow=Math.max(0,e.bagSlow-dt);
+  if((e.grassT||0)>0)e.grassT=Math.max(0,e.grassT-dt);
   const espd=e.spd*((e.slowT||0)>0?0.5:1)*((e.bagSlow||0)>0?(1-bagSlowPct):1);
   if(e.melee){
    if(d>e.r+p.r-4){e.x+=dx/d*espd*dt;e.y+=dy/d*espd*dt;}
@@ -6283,6 +6522,8 @@ function btlUpdate(dt){
   }
   if(hit||s.life<=0||s.x<-20||s.y<-20||s.x>cv.width+20||s.y>cv.height+20)B.shots.splice(i,1);
  }
+ if(B.p.ultCd>0)B.p.ultCd=Math.max(0,B.p.ultCd-dt);
+ btlPetalTick(dt);
  /* 敌方弹道 */
  for(let i=B.eballs.length-1;i>=0;i--){
   const b=B.eballs[i];
@@ -6438,7 +6679,13 @@ function btlHud(){
  if(B.dmgT<=0){B.dmgT=0.15;btlDmgPanel();}
  setSk(s1,ids[0],B.auto[0],p.wjCd[0]);
  setSk(s2,ids[1],B.auto[1],p.wjCd[1]);
- if(su)su.className='btl-skill'+(p.energy>=60&&B.phase==='run'?' ready':'');
+ if(su){
+  const eq=ultEq();
+  const cd=(p.ultCd||0);
+  su.className='btl-skill'+(cd>0?' cd':(p.energy>=60&&B.phase==='run'?' ready':''));
+  const sb=su.querySelector('span');
+  if(sb)sb.textContent=cd>0?('冷却 '+cd.toFixed(1)+'s'):(eq==='baoyu'&&ultOwned('baoyu')?'暴雨天菊':'终结技');
+ }
  if(sa)sa.className='btl-skill'+(p.cd>0?' cd':'');
 }
 function btlDraw(){
@@ -6499,6 +6746,34 @@ function btlDraw(){
    ctx.lineTo(Math.cos(a)*hs.r*0.94,Math.sin(a)*hs.r*0.94);
   }
   ctx.stroke();
+  ctx.restore();
+ }
+ /* 暴雨天菊花瓣 */
+ if(B.petals&&B.petals.length){
+  ctx.save();
+  for(const pt of B.petals){
+   const seek=pt.mode==='seek';
+   ctx.save();
+   ctx.translate(pt.x,pt.y);
+   ctx.rotate(pt.ang+(seek?pt.t*9:0));
+   if(seek){
+    ctx.shadowColor='rgba(190,240,138,.85)';ctx.shadowBlur=(LITE?0:12);
+   }else{
+    ctx.shadowColor='rgba(242,208,107,.7)';ctx.shadowBlur=(LITE?0:10);
+   }
+   const g=ctx.createLinearGradient(0,-8,0,8);
+   g.addColorStop(0,'#FDF3C9');g.addColorStop(0.5,'#F2D06B');g.addColorStop(1,'#D9A63F');
+   ctx.fillStyle=g;
+   ctx.beginPath();ctx.ellipse(0,0,9.5,4.2,0,0,Math.PI*2);ctx.fill();
+   ctx.shadowBlur=0;
+   ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=0.8;
+   ctx.beginPath();ctx.moveTo(-7,0);ctx.lineTo(7,0);ctx.stroke();
+   if(seek){
+    ctx.strokeStyle='rgba(190,240,138,.55)';ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.moveTo(-14,0);ctx.lineTo(-8,0);ctx.stroke();
+   }
+   ctx.restore();
+  }
   ctx.restore();
  }
  /* 八卦法阵 */
@@ -6799,6 +7074,21 @@ function btlDrawMob(ctx,e){
   ctx.strokeStyle='rgba(240,206,126,.65)';ctx.lineWidth=2;
   ctx.beginPath();ctx.arc(0,0,e.r+7,0,Math.PI*2);ctx.stroke();
  }
+ if((e.grassT||0)>0){
+  const ga=Math.min(1,e.grassT/1.0);
+  ctx.save();ctx.globalAlpha=0.32+0.22*Math.sin(B.time*12);
+  ctx.strokeStyle='#8FE07A';ctx.lineWidth=1.6;
+  ctx.beginPath();ctx.arc(0,0,e.r+5,0,Math.PI*2);ctx.stroke();
+  ctx.globalAlpha=0.7;
+  ctx.fillStyle='#8FE07A';
+  for(let i=0;i<3;i++){
+   const a=-Math.PI/2+i*2.1+B.time*1.6;
+   const lx=Math.cos(a)*(e.r+9),ly=Math.sin(a)*(e.r+9);
+   ctx.beginPath();ctx.ellipse(lx,ly,3.2,1.6,a+0.9,0,Math.PI*2);ctx.fill();
+  }
+  ctx.restore();
+  ctx.globalAlpha=1;
+ }
  ctx.fillStyle=hit?'#ffffff':d.color;
  ctx.strokeStyle=d.dark;ctx.lineWidth=2;
  if(e.kind==='spider'){
@@ -6916,7 +7206,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.3.9';
+const BUILD = '0.4.1';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
