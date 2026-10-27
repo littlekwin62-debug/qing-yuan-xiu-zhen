@@ -2800,6 +2800,7 @@ function frDel(i){
  const f=S.friends[i];if(!f)return;
  if(!confirm('确定删除好友「'+f.n+'」吗？'))return;
  S.friends.splice(i,1);
+ if(f.srv&&apiOn())apiUnfriend(f.u);
  logAdd('✦ 已删除好友「'+f.n+'」。');
  try{save();}catch(e){}
  renderFriend();
@@ -2943,11 +2944,16 @@ function apiPoll(){
    if(S.friendReq.length!==before)changed=true;
   }
   if(fri&&fri.ok&&Array.isArray(fri.list)){
+   const srvf={};
    for(const o of fri.list){
+    srvf[o.u]=1;
     const f=S.friends.find(function(x){return x.u===o.u;});
     if(!f){S.friends.push({u:o.u,n:o.n,r:o.r|0,s:o.s|0,p:o.p|0,t:o.t||Date.now(),srv:1});changed=true;}
     else if(f.r!==(o.r|0)||f.p!==(o.p|0)||f.n!==o.n){f.r=o.r|0;f.s=o.s|0;f.p=o.p|0;f.n=o.n;f.t=o.t||Date.now();f.srv=1;changed=true;}
    }
+   const beforeF=S.friends.length;
+   S.friends=S.friends.filter(function(f){return !f.srv||srvf[f.u];});
+   if(S.friends.length!==beforeF)changed=true;
   }
   if(changed){save();renderFriend();}
   else if(curTab==='Friend')refreshFriendMeta();
@@ -2974,6 +2980,11 @@ function apiRefreshNow(){
  apiBusy=false;apiBusyAt=0;
  apiPoll();
  if(curTab==='Friend')renderFriend();
+}
+function apiUnfriend(uid){
+ if(!apiOn()||!apiToken())return;
+ apiReq('/unfriend',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({u:S.uid,token:apiToken(),to:uid})})
+  .then(function(j){if(j&&j.ok)setTimeout(apiPoll,200);});
 }
 function apiAck(fromUid,act){
  if(!apiOn()||!apiToken())return;
@@ -6905,7 +6916,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.3.8';
+const BUILD = '0.3.9';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
