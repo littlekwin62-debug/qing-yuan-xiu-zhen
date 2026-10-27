@@ -9,6 +9,7 @@
  *   POST /req      {token,to}              → {ok}               按道号发申请
  *   GET  /inbox?u=&token=                  → {ok,list:[...]}    我的待处理申请
  *   POST /ack      {token,from,act}        → {ok}               同意/拒绝
+ *   POST /unfriend {token,to}              → {ok}               删除好友（双向解绑）
  *   GET  /friends?u=&token=                → {ok,list:[...]}    好友（实时快照）
  *   GET  /p?u=                             → {ok,player}        查某人快照
  *   GET  /health                           → {ok,ts}
@@ -246,6 +247,22 @@ export async function onRequest(ctx) {
           await add(uid, from);
           await add(from, uid);
         }
+        return J({ ok: true });
+      }
+
+      /* ---------- 删除好友（双向解绑） ---------- */
+      if (path === '/unfriend' && req.method === 'POST') {
+        const body = await req.json();
+        const uid = body && body.u;
+        if (!(await auth(env, uid, body && body.token))) return J({ ok: false, err: 'auth' }, 401);
+        const to = body.to;
+        if (!okUid(to)) return J({ ok: false, err: 'bad-target' }, 400);
+        const drop = async (a, b) => {
+          const list = await readJson(env, 'f:' + a, []);
+          await writeJson(env, 'f:' + a, list.filter((x) => x !== b));
+        };
+        await drop(uid, to);
+        await drop(to, uid);
         return J({ ok: true });
       }
 
