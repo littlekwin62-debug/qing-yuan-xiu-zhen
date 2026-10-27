@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.3.5 · 联网道友</title>
+<title>青元修真 · 测试版 v-0.3.7 · 联网道友</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -808,7 +808,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.3.5 — 联网道友</div>
+      <div class="sub">测试版 v-0.3.7 — 联网道友</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -2084,8 +2084,8 @@ function startNail(){
  S.nail={need:nailNeed(),hits:0,until:0};
  S.hp=Math.min(S.hp,hpMax()*0.1);
  S.mind=Math.min(S.mind,mindMax()*0.1);
- logAdd('⚑ 天道降下「判罚之钉」：诸般修为尽被压制，需以指叩钉 '+S.nail.need+' 次方解。');
- toast('判罚之钉降临！点修为球上的钉子 '+S.nail.need+' 次');
+ logAdd('⚑ 天道降下「判罚之钉」：四维只剩一成、修为与灵石停涨。点击修为球上的钉子叩击 '+S.nail.need+' 次即可令其崩解，崩解后再等 60 秒天道收手。');
+ toast('判罚之钉降临！点修为球上的钉子叩 '+S.nail.need+' 次解封');
  save();updateUI();renderTabs();
 }
 function nailClick(){
@@ -2598,6 +2598,14 @@ function craftAgg(){
  updateUI();renderTabs();save();
 }
 
+function xinfaEff(id, n){
+ const X=XINFA[id];if(!X)return '';
+ const lv=(n==null)?(S.xinfa[id]||0):n;
+ if(X.flatMind!=null)return '+'+fmt(lv*X.flatMind)+' 精神上限';
+ if(X.flat!=null)return '+'+fmt(lv*X.flat)+'/秒';
+ if(X.perLevel!=null)return '+'+(lv*X.perLevel*100).toFixed(1)+'%';
+ return '';
+}
 function upXinfa(id){
  const X=XINFA[id];
  if(X.unlock!==undefined&&S.realm<X.unlock){toast('需'+REALMS[X.unlock].name+'期方可参悟');return;}
@@ -2607,7 +2615,7 @@ function upXinfa(id){
  if(S.xiuwei<cost){toast('修为不足（需'+fmt(cost)+'修为）');return;}
  S.xiuwei-=cost;
  S.xinfa[id]=lv+1;
- const eff=X.flat?('+'+fmt(S.xinfa[id]*X.flat)+'/秒'):('+'+(S.xinfa[id]*X.perLevel*100).toFixed(1)+'%');
+ const eff=xinfaEff(id,S.xinfa[id]);
  toast('《'+X.name+'》第'+S.xinfa[id]+'层，修为获取'+eff);
  logAdd('✦ 你耗'+fmt(cost)+'修为参悟《'+X.name+'》，心法至第'+S.xinfa[id]+'层（修为获取'+eff+'）。');
  updateUI();renderTabs();save();
@@ -2872,12 +2880,16 @@ function apiBoot(force){
    renderFriend();
   });
 }
+const API_HEART_MS=5*60*1000;
+let apiLastSyncAt=0;
 function apiSyncSnap(){
  if(!apiOn()||!apiToken())return;
  const me=frMe();
  const sig=JSON.stringify([me.n,me.r,me.s,me.p]);
- if(sig===apiLastSync)return;
+ const stale=(Date.now()-(apiLastSyncAt||0))>API_HEART_MS;
+ if(sig===apiLastSync&&!stale)return;
  apiLastSync=sig;
+ apiLastSyncAt=Date.now();
  apiReq('/sync',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({u:S.uid,token:apiToken(),snap:me})});
 }
 function apiAddByUid(){
@@ -2896,17 +2908,20 @@ function apiAddByUid(){
    else{toast('发送失败，稍后再试');}
   });
 }
+let apiBusyAt=0, apiLastPollAt=0;
 function apiPoll(){
- if(!apiOn()||!apiToken()||apiBusy)return;
+ if(!apiOn()||!apiToken())return;
+ if(apiBusy&&Date.now()-apiBusyAt<15000)return;
+ apiBusy=false;
  if(document.visibilityState==='hidden')return;
  if(typeof curTab!=='undefined'&&curTab!=='Friend')return; // 只在好友页轮询
- apiBusy=true;
+ apiBusy=true;apiBusyAt=Date.now();
  const tk=apiToken();
  Promise.all([
   apiReq('/inbox?u='+encodeURIComponent(S.uid)+'&token='+encodeURIComponent(tk)),
   apiReq('/friends?u='+encodeURIComponent(S.uid)+'&token='+encodeURIComponent(tk))
  ]).then(function(r){
-  apiBusy=false;
+  apiBusy=false;apiLastPollAt=Date.now();
   const inb=r[0], fri=r[1];
   let changed=false;
   if(inb&&inb.ok&&Array.isArray(inb.list)){
@@ -2915,7 +2930,7 @@ function apiPoll(){
     srv[o.u]=1;
     const q=S.friendReq.find(function(x){return x.u===o.u;});
     if(!q){S.friendReq.push({u:o.u,n:o.n,r:o.r|0,s:o.s|0,p:o.p|0,t:o.t||Date.now(),srv:1});changed=true;}
-    else if(q.r!==(o.r|0)||q.p!==(o.p|0)||q.n!==o.n){q.r=o.r|0;q.s=o.s|0;q.p=o.p|0;q.n=o.n;q.srv=1;changed=true;}
+    else if(q.r!==(o.r|0)||q.p!==(o.p|0)||q.n!==o.n){q.r=o.r|0;q.s=o.s|0;q.p=o.p|0;q.n=o.n;q.t=o.t||Date.now();q.srv=1;changed=true;}
    }
    const before=S.friendReq.length;
    S.friendReq=S.friendReq.filter(function(q){return !q.srv||srv[q.u];});
@@ -2925,11 +2940,34 @@ function apiPoll(){
    for(const o of fri.list){
     const f=S.friends.find(function(x){return x.u===o.u;});
     if(!f){S.friends.push({u:o.u,n:o.n,r:o.r|0,s:o.s|0,p:o.p|0,t:o.t||Date.now(),srv:1});changed=true;}
-    else if(f.r!==(o.r|0)||f.p!==(o.p|0)||f.n!==o.n){f.r=o.r|0;f.s=o.s|0;f.p=o.p|0;f.n=o.n;f.srv=1;changed=true;}
+    else if(f.r!==(o.r|0)||f.p!==(o.p|0)||f.n!==o.n){f.r=o.r|0;f.s=o.s|0;f.p=o.p|0;f.n=o.n;f.t=o.t||Date.now();f.srv=1;changed=true;}
    }
   }
   if(changed){save();renderFriend();}
- });
+  else if(curTab==='Friend')refreshFriendMeta();
+ }).catch(function(){apiBusy=false;});
+}
+/* 只在好友页存在的「上次同步 / 在线状态」就地刷新，不重建整张卡（避免输入框被清空） */
+function refreshFriendMeta(){
+ const a=document.getElementById('frPollAt');
+ if(a)a.textContent=apiLastPollAt?('上次拉取 '+Math.max(0,Math.round((Date.now()-apiLastPollAt)/1000))+' 秒前'):'尚未拉取';
+ const rows=document.querySelectorAll('[data-fruid]');
+ for(const el of rows){
+  const u=el.getAttribute('data-fruid');
+  const f=(S.friends||[]).find(function(x){return x.u===u;});
+  if(!f)continue;
+  const mins=Math.max(0,Math.round((Date.now()-(f.t||0))/60000));
+  const tag=document.getElementById('frAge-'+u);
+  if(tag){
+   tag.textContent=mins<1?'刚刚同步':(mins<10?('在线 · '+mins+' 分钟前同步'):('离线 · '+(mins<60?mins+' 分钟':Math.round(mins/60)+' 小时')+'前同步'));
+   tag.style.color=mins<10?'#7fe3c4':'#8fa3bd';
+  }
+ }
+}
+function apiRefreshNow(){
+ apiBusy=false;apiBusyAt=0;
+ apiPoll();
+ if(curTab==='Friend')renderFriend();
 }
 function apiAck(fromUid,act){
  if(!apiOn()||!apiToken())return;
@@ -2956,6 +2994,9 @@ if(typeof document!=='undefined'&&document.addEventListener){
    setTimeout(function(){try{apiPoll();}catch(e){}},120);
   }
  });
+}
+if(typeof setInterval!=='undefined'){
+ setInterval(function(){try{if(typeof curTab!=='undefined'&&curTab==='Friend')refreshFriendMeta();}catch(e){}},1000);
 }
 function apiStartTimers(){
  if(!apiOn())return;
@@ -3028,6 +3069,8 @@ function renderFriend(){
  h+='<div class="fr-card">'
   +'<div class="fr-k">RANK · 排行榜</div>'
   +'<div class="fr-t">与好友比拼'+(isRealm?'境界':'位面模拟段位')+'</div>'
+  +'<div class="fr-dim" style="margin:-2px 0 8px"><span id="frPollAt">'+(apiLastPollAt?('上次拉取 '+Math.max(0,Math.round((Date.now()-apiLastPollAt)/1000))+' 秒前'):'尚未拉取')+'</span>'
+  +'　<button class="btn small" onclick="apiRefreshNow()">立即刷新</button></div>'
   +'<div class="fr-seg">'
   +'<button class="btn small'+(isRealm?' primary':'')+'" onclick="frSetBoard(0)">境界榜</button>'
   +'<button class="btn small'+(isRealm?'':' primary')+'" onclick="frSetBoard(1)">位面榜</button>'
@@ -3052,9 +3095,11 @@ function renderFriend(){
    +'<div class="fr-t">点删除可移除，战绩以对方最近一次复制的好友码为准</div>';
   S.friends.forEach((f,i)=>{
    const mins=Math.max(0,Math.round((Date.now()-(f.t||0))/60000));
-   h+='<div class="fr-item"><div class="fr-rank">'+(i+1)+'</div>'
+   const ageTxt=mins<1?'刚刚同步':(mins<10?('在线 · '+mins+' 分钟前同步'):('离线 · '+(mins<60?mins+' 分钟':Math.round(mins/60)+' 小时')+'前同步'));
+   const ageCol=mins<10?'#7fe3c4':'#8fa3bd';
+   h+='<div class="fr-item" data-fruid="'+f.u+'"><div class="fr-rank">'+(i+1)+'</div>'
     +'<div><div class="fr-nm">'+String(f.n||'无名道友')+' <span class="fr-dim">UID '+f.u+'</span></div>'
-    +'<div class="fr-dim">'+frRealmText(f.r|0,f.s|0)+' · '+frPlaneText(f.p|0)+' · 战绩更新于 '+(mins<1?'刚刚':mins+' 分钟前')+'</div></div>'
+    +'<div class="fr-dim">'+frRealmText(f.r|0,f.s|0)+' · '+frPlaneText(f.p|0)+' · <span id="frAge-'+f.u+'" style="color:'+ageCol+'">'+ageTxt+'</span></div></div>'
     +'<div class="fr-row"><button class="btn small danger" onclick="frDel('+i+')">删除</button></div></div>';
   });
   h+='</div>';
@@ -3173,6 +3218,24 @@ function tipHTML(kind){
    return '<b>红尘纷扰中</b><br>俗事缠身，无法专心修炼：修为产出 ×0.5（-50%）<br>当前修为产出：'+fmt(cur)+'/秒<br>剩余 '+fmtClock(S.worldUntil-now)+'<br>服清心丹可立即驱散，同时驱散心魔';
   }
   return '<b>红尘纷扰</b><br>角色深陷现实生活的困扰，无法专心修炼<br>总体修炼速度降低 50%，持续 1 分钟<br>触发权重 8/108（约每 13 分钟一次）<br>可服清心丹解除；清心丹同时驱散心魔';
+ }
+ if(kind==='nail'){
+  const np=nailPhase();
+  const need=(S.nail&&S.nail.need)||nailNeed();
+  const hits=(S.nail&&S.nail.hits)||0;
+  if(np==='hit'){
+   return '<b>判罚之钉 · 镇压中</b><br>天道降罚，钉子钉在修为球上：四维（攻/防/精/暴）只剩一成，修为与下品灵石停涨，心魔红尘不侵<br>'
+    +'<b>解除方式</b>：点击修为球上的钉子叩击，叩满 <b>'+need+'</b> 次即当场崩解（当前 '+hits+' / '+need+'）<br>'
+    +'叩满后天道收手 60 秒，届时钉子彻底散去、修为恢复<br>'
+    +'<span class="tip-dim">触发：元婴以上突破小境界时 20% 概率；叩击次数随境界提高——元婴/化神前 12 次、化神 15 次、大乘 18 次。</span>';
+  }
+  if(np==='cool'){
+   return '<b>判罚之钉 · 已崩解</b><br>你已叩满 '+need+' 击，钉子碎裂，天道正在收手<br>剩余 '+fmtClock(Math.max(0,S.nail.until-now))+' 后彻底散去，届时修为恢复正常'
+    +'<br><span class="tip-dim">这段时间里四维仍被压制，别再急着突破。</span>';
+  }
+  return '<b>判罚之钉</b><br>元婴以上突破小境界时，有 20% 概率招来天道降罚：钉子钉在修为球上，四维只剩一成、修为与灵石停涨、心魔红尘不侵<br>'
+   +'解除方式：反复点击钉子叩击，叩满 12（化神 15 / 大乘 18）次后钉子崩解，再等 60 秒天道收手<br>'
+   +'<span class="tip-dim">此间按实力硬扛亦可，但叩钉最快；修为满溢时也可先叩钉再突破。</span>';
  }
  if(now<S.heartUntil){
   const cur=ratePerSec();
@@ -4360,7 +4423,7 @@ function renderXinfa(){
    const locked=X.unlock!==undefined&&S.realm<X.unlock;
    const canUp=xinfaCanUp(id);
    const cost=max?0:Math.round(X.baseCost*Math.pow(X.costMul,lv));
-   const eff=function(n){return X.flat?('+'+fmt(n*X.flat)+'/秒'):('+'+(n*X.perLevel*100).toFixed(1)+'%');};
+   const eff=function(n){return xinfaEff(id,n);};
    const tag=locked?('<span class="tag lock">需'+REALMS[X.unlock].name+'期</span>')
     :(max?'<span class="tag owned">已圆满</span>'
      :'<span class="tag lock" style="border-color:rgba(212,178,106,.5);color:#e9cd8c">等级 '+lv+'/'+X.maxLevel+'</span>');
@@ -6801,7 +6864,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.3.5';
+const BUILD = '0.3.7';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
