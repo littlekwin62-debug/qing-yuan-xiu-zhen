@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.5.4 · 画入仙途</title>
+<title>青元修真 · 测试版 v-0.5.5 · 卷开见字</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -184,6 +184,15 @@ footer{margin-top:18px;text-align:center;font-size:12px;color:#5f6676;text-shado
 .story-thumb{width:100%;max-width:560px;aspect-ratio:16/9;height:auto;border-radius:10px;overflow:hidden;margin-bottom:10px;border:1px solid rgba(255,255,255,.08)}
 .story-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 /* ---------- 宫格漫画阅读器（v0.5.4） ---------- */
+.ch1-sum{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 0}
+.ch1-sum::-webkit-details-marker{display:none}
+.ch1-sum .ch1-arrow{color:#7d8aa0;font-size:12px;letter-spacing:1px;transition:transform .18s ease}
+details[open] .ch1-sum .ch1-arrow{transform:rotate(180deg)}
+.ch1-body{margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,.08)}
+.ch1-body p{font-size:18.7px;line-height:2.05;color:#c9d4e4;margin:0 0 1.05em;text-indent:2em;letter-spacing:.2px}
+.ch1-body p:last-child{margin-bottom:0}
+.ch1-body p.ch1-note{font-size:13px;color:#7d8aa0;text-indent:0;letter-spacing:.4px}
+@media (max-width:640px){.ch1-body p{font-size:17px;line-height:1.95}}
 .comic-modal{position:fixed;inset:0;background:#04070d;z-index:95;display:none;align-items:center;justify-content:center;padding:52px 12px 12px}
 .comic-modal.show{display:flex}
 .comic-img{max-width:100%;max-height:100%;object-fit:contain;border:1px solid rgba(212,178,106,.26);border-radius:6px;background:#0a0f18;box-shadow:0 20px 60px rgba(0,0,0,.7)}
@@ -830,7 +839,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.5.4 — 画入仙途</div>
+      <div class="sub">测试版 v-0.5.5 — 卷开见字</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -4784,6 +4793,22 @@ function renderRing(){
 
 let storyTimer=null, storyAutoTimer=null, storyIdx=0, storyTyping=false, storyAuto=false;
 
+/* v0.5.5：第一章正文（纯文本） */
+const CH1_TITLE='第一章 · 仙途初始';
+const CH1_TEXT=["玩家：这里用“我”代表。","炎炎夏日，九月的骄阳依然似火，为期一个月的修真大学专属军训终于结束了。","在灵气刚刚复苏没多久的世界里，修士没法做到直接引气入体，所以蓝星修真管理委员会想出了一套办法，那就是锻体，这也是锻体境的由来。","锻体之后，身体经脉被后天扩大，才可以相对容易的吸取这稀薄的灵力，才能踏入练气。","不过，对于蓝星上次灵气旺盛时代就存在的青元宗，这锻体问题，已然有系统化的解决方案。","那就是一个月的魔鬼训练！！！","能考入修真大学中的翘楚的青元大学的同学，都是整个蓝星夏国修真天赋最为卓越的天才，他们有的家世显赫，早就已经在锻体路上打下了坚实的基础；有的天赋惊人，灵气亲和力高得吓人。","我的话，应该属于后者吧，我体质算不上最好，不过踏入大学前我还是有健身的习惯的，所以体质普通，但常年健身，算结实。","但是！","我现在在怀疑青元大学的军训是否还在人类能承受的范畴内，虽然不符合也没什么不奇怪。","我理解了，为什么辅导员在我们报道的第一天就给我们一人发了30包回春散……","————————","“兄弟，今天下午最后的训练了，咱回到学校之后弄点啥补补啊，我家里给我寄来了一点二品妖兽精肉，咱去食堂让大厨帮咱处理处理呗~”","这是我这一个月来交到的最为熟悉的一个朋友，刘青锋，性格活泼，体格健壮，一身小麦色的皮肤和结实壮硕的肌肉，说明他是个炼体的好手，就是这家伙不是很想珍惜他这身炼体天赋，对法修充满了极致的好奇心。","“青锋，咱真的能在天黑之前跑回宿舍吗”我说。","虽然二品妖兽精肉真的很有诱惑力，但是一天300公里的长跑是真的会把锻体修士跑废，凌晨太阳还没出来就被军训教官一个传送阵把所有新生都传送到了300公里外的另一个城市（金港市），然后给我们发信息说让我们跑回学校，晚上9点之前跑不回来，不准入学。","当然，我也习惯这么离谱的军训方式了，这一个月就是这么过来的，惩罚也都是不准入学。","不过，我们班也还真没人掉队退学就是了。","就像我和青锋，两个人算是修为在班里比较领先的，都是锻体九层，青锋靠着体格优势，比我要轻松些，不过他说要陪着我，路上也有个伴。","“嗨，还差30公里，努努力，加油赶在王大厨下班前赶去食堂啊”刘青锋回应道。","————————\n不久，大概1小时左右，太阳下山了，天变成了深蓝色，我终于看到了青元大学那扇巍峨的大门，每次到这里，我都怀疑，这真的是个政府可以控制的大学吗……","不过这些不是我现在该想的。","“同学啊，咱俩终于到了啊，快快快，我回宿舍拿下肉，你去食堂找王大厨。”刘青锋一扫疲态，想到吃的浑身有劲，跟我说完话以比军训长跑更快的速度跑向了宿舍的方向。","当然，我们的军训任务在我们踏进校门的时候就结束了，手机上也传来了【恭喜同学顺利完成军训并踏入青元大学，愿你仙途顺利~】的提示。","“好好好，我这就去，谢谢你的肉啦，青锋。”我笑了笑，慢跑着去了食堂，一天的灵力消耗真不少，刘青锋搞来的妖兽肉正好补补。","要说为什么我和刘青锋关系好，我也说不上来。","我俩第一次见面，简单聊了几句之后，他说：“同学，你这性格不行啊，修真世界要爽朗些，直白些，不过你放心，你这个朋友我是交下了，以后我罩着你！”","我当时也是有点懵，不过这一个月相处下来，倒也习惯了。","————————\n我们俩终于吃上饭了，王大厨的手艺肯定是青元宗传下来的，太好吃了，当然，刘青锋家里有钱搞到如此美味的妖兽肉也是一方面。","刘青锋自己说过，他家里是在京城的一个古武世家，早年间应该和青元宗有关系，但是现在没什么关系了，大家都受夏国修真委员会统一管理。","二品妖兽肉的灵气果然不错，比空气中的精纯多了，这怎么也属于练气筑基修士的妖兽身上的肉了，果真优质！","灵气入体，加上我吃饭前把最后一天的回春散吃了，现在我感觉自己灵气特别充盈，甚至，隐隐进入到了一个奇妙的状态！","我好像能模糊的看到空气中的灵气了，一缕一缕，白色的，就是有点浑浊，好像掺着沙子。","“同学，同学，停下！”王大厨换下厨师的打扮了，常服出现在我身旁，拍打着我的肩膀。","“王大厨。”我吓了一跳，瞬间，眼前恢复了正常。","“小道友，天赋不错啊，没有心法就能引气入体了，不过这并不好，你这种天分，需要一门好的心法帮助你，明天去找你导员吧，青元宗的弟子心法会适合你的。”","————————断章"];
+
+function ch1HTML(){
+ let h='<div class="card" style="margin-top:12px">';
+ h+='<div class="row"><span class="gname">'+CH1_TITLE+'　正文</span><span class="tag owned">'+CH1_TEXT.join('').length+' 字</span></div>';
+ h+='<div class="desc">纯文字版，与宫格漫画同一段故事。点开阅读，字大一些方便看。</div>';
+ h+='<details class="ch1-details"><summary class="ch1-sum"><span>展开正文</span><span class="ch1-arrow">▾</span></summary><div class="ch1-body">';
+ CH1_TEXT.forEach(function(p,i){
+  h+='<p'+(i===0&&/^玩家/.test(p)?' class="ch1-note"':'')+'>'+p+'</p>';
+ });
+ h+='</div></details></div>';
+ return h;
+}
+
 function renderStory(){
  const box=$('tabStory');
  const done=!!S.story.done;
@@ -4809,6 +4834,7 @@ function renderStory(){
   +'<span class="row" style="gap:8px"><button class="btn small" onclick="openComic(\'m\',false)">男主版</button>'
   +'<button class="btn small" onclick="openComic(\'f\',false)">女主版</button></span></div>';
  h+='</div>';
+ h+=ch1HTML();
  box.innerHTML=h;
 }
 
@@ -7438,7 +7464,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.5.4';
+const BUILD = '0.5.5';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
