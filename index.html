@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.4.3 · 三瓣分花</title>
+<title>青元修真 · 测试版 v-0.5.1 · 剑气归衡</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -636,6 +636,7 @@ footer{color:#5E7592;letter-spacing:1px}
 .btl-select{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;background:radial-gradient(80% 70% at 50% 40%,rgba(10,16,26,.94),rgba(4,7,12,.985))}
 .btl-panel{width:min(860px,100%);max-height:100%;overflow:auto}
 .btl-h2{font-size:22px;color:#F1E9D6;letter-spacing:5px;margin-bottom:6px}
+.g-grass{color:#7FD86B}
 .btl-note{font-size:12.5px;color:#8B95A8;line-height:1.8;margin-bottom:14px}
 .btl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;margin-bottom:14px}
 .btl-opt{text-align:left;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#B9C2D2;font-size:13px;cursor:pointer;line-height:1.5}
@@ -817,7 +818,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.4.3 — 三瓣分花</div>
+      <div class="sub">测试版 v-0.5.1 — 剑气归衡</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -878,7 +879,7 @@ footer{color:#5E7592;letter-spacing:1px}
       <li>气血上限 100（炼体诀、混元一气功可提升）；心魔归零会跌落一层，脱战后每秒回复 10 点（混元一气功可提高）。精神力用于凝炼灵珠与参悟功法，基础每秒回复 5 点（《炼神决》可提高）。</li>
       <li>剧情：随时可在“剧情”页签观看《人界篇·序章》，不影响修行进度。</li>
       <li>道身：男主 / 女主皆青元大学大一新生，18 岁，姓名可自填；主页面有全身立绘与设定卡，道身只影响立绘与背景，不影响数值。此后所有插画沿用这套设定图的画风（清透水彩感学院风），配色按版本另行决定。</li>
-      <li>离线收益上限 12 小时、效率 100%；修为满而未突破时可继续积攒到当前层需求的 125%，等回来亲手突破。</li>
+      <li>离线收益上限 6 小时、效率 50%；修为满而未突破时可继续积攒到当前层需求的 125%，等回来亲手突破。</li>
     </ul>
   </details>
 
@@ -979,7 +980,7 @@ footer{color:#5E7592;letter-spacing:1px}
         <button class="btn speed-btn" data-s="10" onclick="setSpeed(10)">×10</button>
         <button class="btn speed-btn" data-s="100" onclick="setSpeed(100)">×100</button>
         <button class="btn speed-btn" data-s="1000" onclick="setSpeed(1000)">×1000</button>
-        <span class="note">加速仅作用于本页挂机 · 离线收益上限 12 小时</span>
+        <span class="note">加速仅作用于本页挂机 · 离线收益上限 6 小时</span>
       </div>
       <div class="row" style="gap:8px">
         <button class="btn small" onclick="openExport()">导出/导入存档</button>
@@ -1092,7 +1093,7 @@ footer{color:#5E7592;letter-spacing:1px}
     <p class="big-num" id="offXiu">+0 修为</p>
     <p class="small" id="offLing">+0 下品灵石</p>
     <p class="small" id="offNote"></p>
-    <p class="small">（离线收益上限 12 小时；期间的奇遇已记入日志）</p>
+    <p class="small">（离线收益上限 6 小时、按在线效率 50% 结算；期间的奇遇已记入日志）</p>
     <button class="btn big" onclick="closeSettle()">收下机缘</button>
   </div>
 </div>
@@ -1265,7 +1266,9 @@ const GONGFA=[
   costs:[150,423,696,969,1243,1516,1789,2062,2336,2609,2882,3155,3429,3702,3975,4248,4522,4795,5068,5341,5615,5888,6161,6434,6708,6981,7254,7527,7801,8000]}
 ];
 const DANS={
- juqi:{name:'聚气丹',grade:'一品',border:'gray',cur:0,cost:100,
+ anshen:{name:'安神丹',grade:'一品',border:'gray',cur:0,cost:1000000,res:{key:'hxc',n:10},
+   desc:'服下后 30 秒内每秒回复 1% 精神力上限的精神力；药力散尽后 60 秒内不可再服。'},
+  juqi:{name:'聚气丹',grade:'一品',border:'gray',cur:0,cost:100,
   desc:'立即获得当前 60 秒的修为产出；筑基期及以后，每个大境界效果递减 50%。'},
  qingxin:{name:'清心丹',grade:'一品',border:'gray',cur:0,cost:50,
   desc:'驱散心魔与红尘纷扰，止住气血流逝。'},
@@ -1288,11 +1291,12 @@ const DANS={
  dahuan:{name:'一品大还丹',grade:'一品',border:'gray',cur:0,cost:100000000,heal:{pct:0.10,pctps:0.02,sec:5},
   desc:'一品丹药。立即回复 10% 气血上限，其后 5 秒内每秒回复 2% 气血上限的气血。'}
 };
-const DAN_KEYS=['juqi','qingxin','dujie','wudao','zhenyuan','naling','wanfa','huichunsan','huichundan','xiaohuan','dahuan'];
+const DAN_KEYS=['juqi','qingxin','dujie','wudao','zhenyuan','naling','wanfa','huichunsan','huichundan','xiaohuan','dahuan','anshen'];
 /* 丹药服用门槛（大境界序号）与递减规则 */
 const DAN_RULE={
  juqi:{min:0,from:2,step:0.5,note:'筑基期起每境效果减半',max:4,expire:'假丹期后失效'},
  qingxin:{min:0},
+ anshen:{min:0},
  dujie:{min:0},
  wudao:{min:0},
  zhenyuan:{min:2,from:6,step:0.25,note:'元婴期起每境效果降至四分之一',max:6,expire:'元婴期后失效'},
@@ -2383,8 +2387,14 @@ function danExpired(k){
 function danCostUnit(k){return DANS[k].cur===1?'中品':'下品';}
 function buyDan(k){
  const d=DANS[k],n=danQty(k),total=d.cost*n;
+ if(d.res&&d.res.n){
+  if(!S.inv)S.inv={};
+  const need=d.res.n*n,have=S.inv[d.res.key]|0;
+  if(have<need){toast((RES[d.res.key]?RES[d.res.key].name:d.res.key)+'不足（需 '+need+' 株，现有 '+have+' 株）');return;}
+ }
  if(tierBal(d.cur)<total){toast(danCostUnit(k)+'灵石不足（需 '+fmt(total)+'）');return;}
  tierSub(d.cur,total);
+ if(d.res&&d.res.n)S.inv[d.res.key]=Math.max(0,(S.inv[d.res.key]|0)-d.res.n*n);
  S.dan[k]=(S.dan[k]||0)+n;
  if(S.stats)S.stats.danBought=(S.stats.danBought|0)+n;
  toast('购得'+d.name+' ×'+n+'，耗 '+fmt(total)+' '+danCostUnit(k)+'灵石');
@@ -2394,6 +2404,7 @@ function buyDan(k){
 function useDan(k){
  const d=DANS[k];
  if(k==='dujie'){toast('渡劫丹在突破时勾选自动使用');return;}
+ if(k==='anshen'&&Date.now()<(S.anshenLock||0)){toast('安神丹药力未散，还需 '+Math.ceil(((S.anshenLock||0)-Date.now())/1000)+' 秒');return;}
  if(k==='qingxin'&&Date.now()>=S.heartUntil&&Date.now()>=S.worldUntil){toast('道心清明，无需服用清心丹');return;}
  if(!S.dan[k]){toast('没有'+d.name);return;}
  if(danLocked(k)){toast('需'+REALMS[DAN_RULE[k].min].name+'期方可服用'+d.name);return;}
@@ -2423,6 +2434,13 @@ function useDan(k){
   const label=(hadHeart&&hadWorld)?'心魔与红尘纷扰':(hadHeart?'心魔':'红尘纷扰');
   toast(label+'已除，道心清明');
   logAdd('✦ 你服下清心丹，'+label+'消散，效率恢复。');
+ }
+ if(k==='anshen'){
+  const now2=Date.now();
+  S.mindHot={until:now2+30000,pctps:0.01};
+  S.anshenLock=now2+30000+60000;
+  toast('服下安神丹：30 秒内每秒回复 1% 精神力上限');
+  logAdd('❀ 你服下安神丹，神魂渐安，识海回暖。');
  }
  if(k==='wudao'){
   S.wudaoUntil=Date.now()+900000;
@@ -2584,7 +2602,47 @@ function downTier(i){
  S.high[i-1]-=1;
  tierAdd(i-1,TIER_RATE);
  toast('兑换成功：1 亿'+tierName(i-1));
- logAdd('✦ 你以 1 '+tierName(i)+'兑换 1 亿'+tierName(i-1)+'。');
+toast('兑换成功：1 亿'+tierName(i-1));
+  logAdd('✦ 你以 1 '+tierName(i)+'兑换 1 亿'+tierName(i-1)+'。');
+  updateUI();renderBank();save();
+}
+/* v-0.5：自定义兑换数量（源品阶灵石）+ 快捷倍数 */
+function tierAmtVal(){
+ const el=$('tierAmt');
+ const v=Math.floor(Number((el&&el.value)||0));
+ return isFinite(v)&&v>0?v:0;
+}
+function tierMul(k){
+ const el=$('tierAmt');
+ if(!el)return;
+ const cur=Math.floor(Number(el.value)||0);
+ const base=cur>0?cur:100000000;
+ el.value=String(base*k);
+}
+function upTierN(i){
+ if(i<0||i>3)return;
+ const amt=tierAmtVal();
+ if(!amt){toast('请输入要兑换的灵石数量');return;}
+ const n=Math.floor(amt/TIER_RATE);
+ if(n<1){toast('至少需要 1 亿'+tierName(i));return;}
+ const need=n*TIER_RATE;
+ if(tierBal(i)<need){toast(tierName(i)+'不足（需 '+fmt(need)+'）');return;}
+ tierSub(i,need);
+ S.high[i]=(S.high[i]||0)+n;
+ toast('兑换成功：'+fmt(n)+' '+tierName(i+1));
+ logAdd('✦ 你以 '+fmt(need)+tierName(i)+'兑换 '+fmt(n)+' '+tierName(i+1)+'。');
+ updateUI();renderBank();save();
+}
+function downTierN(i){
+ if(i<1||i>4)return;
+ const amt=tierAmtVal();
+ if(!amt){toast('请输入要兑换的灵石数量（个）');return;}
+ const n=Math.floor(amt);
+ if((S.high[i-1]||0)<n){toast(tierName(i)+'不足（需 '+fmt(n)+' 个）');return;}
+ tierSub(i,n);
+ tierAdd(i-1,n*TIER_RATE);
+ toast('兑换成功：'+fmt(n*TIER_RATE)+' '+tierName(i-1));
+ logAdd('✦ 你以 '+fmt(n)+' '+tierName(i)+'兑换 '+fmt(n*TIER_RATE)+tierName(i-1)+'。');
  updateUI();renderBank();save();
 }
 
@@ -3829,11 +3887,11 @@ const WUJI=[
   desc:'0.6 秒内连射分裂剑气，朝面前 100 度扇形展开；飞出约一丈后顿 0.1 秒，随即极速追索敌手。命中时炸散为数道小剑气——小剑气先在原地绽开成型，再去寻下一个敌手，不会回咬刚被击中的那只。',
   tag:'物理 · 分裂 · 裂伤',
   stages:[
-   {xiu:100,mind:50,ling:1000,study:30,eff:'可施展《分裂剑》：分裂剑气 6 道、小剑气 3 道'},
-   {xiu:1000,mind:50,ling:10000,study:50,eff:'小剑气增至 4 道'},
+   {xiu:100,mind:50,ling:1000,study:30,eff:'可施展《分裂剑》：分裂剑气 6 道（75% 攻击）、小剑气 3 道（50% 攻击）'},
+   {xiu:1000,mind:50,ling:10000,study:50,eff:'小剑气增至 4 道（50% 攻击）'},
    {xiu:3000,mind:50,ling:30000,study:70,eff:'分裂剑气增至 9 道，「裂伤」延长至 1.4 秒'},
-   {xiu:5000,mind:80,ling:50000,study:90,eff:'分裂剑气伤害提升至攻击力的 135%'},
-   {xiu:8888,mind:90,ling:88888,study:120,eff:'小剑气增至 5 道，伤害提升至攻击力的 115%'}
+   {xiu:5000,mind:80,ling:50000,study:90,eff:'分裂剑气伤害提升至攻击力的 95%'},
+   {xiu:8888,mind:90,ling:88888,study:120,eff:'小剑气增至 5 道，伤害提升至攻击力的 70%'}
   ]},
  {id:'hushen',name:'青元护身阵',grade:'一品上',border:'gray',toggle:true,
   flavor:'「八面青锋，护我身心。」',
@@ -3875,14 +3933,14 @@ const WUJI_STAGE=['入门','小成','大成','融会贯通','完全掌握'];
 const ULTS=[
  {id:'baoyu',name:'暴雨天菊',grade:'三品上',border:'green',
   flavor:'「菊开一瞬，雨落千瓣。」',
-  desc:'以自身为蕊，连放三段暴雨天菊绕身旋转；每段 15 枚花瓣，段与段之间隔 2 秒。旋转 1.8 秒内触敌即伤（草属，攻击力 5%），此间命中不积充能；旋转毕，花瓣极速索敌，中途不散，命中造成攻击力 60% 物理 + 45% 草属，并积 0.8 充能。草属伤害会使妖物「染草」1 秒（元素反应将在后续版本接入）。同一妖物最多被 3 枚花瓣锁定，超出的花瓣转投它敌；若场上妖物都被 3 枚锁满（少怪、单只虫王），剩余花瓣不再受限，全数围攻。',
-  tag:'法术 · 草 · 终结技',
+  desc:'以自身为蕊，连放三段暴雨天菊绕身旋转；每段 15 枚花瓣，段与段之间隔 2 秒。旋转 1.8 秒内触敌即伤（<span class="g-grass">草属性伤害</span>，攻击力 5%），此间命中不积充能；旋转毕，花瓣极速索敌，中途不散，命中造成攻击力 60% 物理伤害 + 45% <span class="g-grass">草属性伤害</span>，并积 0.8 充能。<span class="g-grass">草属性伤害</span>会使妖物「染草」1 秒（元素反应将在后续版本接入）。同一妖物最多被 3 枚花瓣锁定，超出的花瓣转投它敌；若场上妖物都被 3 枚锁满（少怪、单只虫王），剩余花瓣不再受限，全数围攻。',
+  tag:'法术 · 草属性 · 终结技',
   stages:[
-   {xiu:100,mind:20,ling:100,study:15,eff:'可施展《暴雨天菊》：三段 × 15 花瓣，旋转触敌 5% 草伤，索敌 60% 物理 + 45% 草伤'},
+   {xiu:100,mind:20,ling:100,study:15,eff:'可施展《暴雨天菊》：三段 × 15 花瓣，旋转触敌 5% <span class="g-grass">草属性伤害</span>，索敌 60% 物理伤害 + 45% <span class="g-grass">草属性伤害</span>'},
    {xiu:800,mind:25,ling:1000,study:20,eff:'每段花瓣 15 → 20 枚'},
-   {xiu:1200,mind:50,ling:3000,study:35,eff:'旋转期草属伤害 5% → 9%'},
+   {xiu:1200,mind:50,ling:3000,study:35,eff:'旋转期<span class="g-grass">草属性伤害</span> 5% → 9%'},
    {xiu:2000,mind:60,ling:5000,study:50,eff:'段间隔 2.0 → 1.3 秒'},
-   {xiu:3500,mind:90,ling:8888,study:70,eff:'索敌伤害 60%+45% → 80% 物理 + 60% 草属'}
+   {xiu:3500,mind:90,ling:8888,study:70,eff:'索敌伤害 60%+45% → 80% 物理伤害 + 60% <span class="g-grass">草属性伤害</span>'}
   ]}
 ];
 const ULT_ID='baoyu';
@@ -4008,7 +4066,7 @@ function equipWuji(id,slot){
 function fenlieSpec(){
  const lv=Math.max(1,wujiLv('fenlie'));
  return {waves:lv>=3?9:6,small:lv>=5?5:(lv>=2?4:3),
-  bigDmg:lv>=4?1.35:1.10,smallDmg:lv>=5?1.15:0.80,dotDur:lv>=3?1.4:1.0};
+  bigDmg:lv>=4?0.95:0.75,smallDmg:lv>=5?0.70:0.50,dotDur:lv>=3?1.4:1.0};
 }
 /* 青元护身阵按等级解算参数 */
 function hushenSpec(){
@@ -4242,7 +4300,7 @@ function renderDan(){
   else if(k==='wudao')eff='服下后 15 分钟内顿悟触发权重 +35%';
   h+='<div class="card dan-card gf-'+d.border+cardCls(key)+'" data-card="'+key+'">'
    +'<div class="dan-head"><span class="dan-name">'+d.name+'</span><span class="grade'+(d.grade==='无级别'||d.grade==='无品'?' none':'')+'">'+d.grade+'</span>'+cfTog(key)+'</div>'
-   +'<div class="dan-cost">库存 '+S.dan[k]+' 枚 · 单价 '+fmt(d.cost)+' '+cur+'灵石</div>'
+   +'<div class="dan-cost">库存 '+S.dan[k]+' 枚 · 单价 '+fmt(d.cost)+' '+cur+'灵石'+(d.res&&d.res.n?(' + '+d.res.n+' 株回香草'):'')+'</div>'
    +(lock?'<div class="dan-lock">需'+REALMS[DAN_RULE[k].min].name+'期方可服用</div>':'')
    +(expired?'<div class="dan-lock">'+DAN_RULE[k].expire+'</div>':'')
    +'<div class="cf-brief dan-buy"><input class="dan-qty" id="qty_'+k+'" type="number" min="1" max="999" step="1" value="1" onchange="danQty(\''+k+'\')">'
@@ -4278,7 +4336,7 @@ function bankSpark(){
   +'</svg>';
 }
 /* ---------- 官方回收点 ---------- */
-const RES_PRICE={yaodan:800,jingdan:9000,shoupi:150,lingcao:120,yaoxue:200};
+const RES_PRICE={yaodan:800,jingdan:9000,shoupi:150,lingcao:120,yaoxue:200,hxc:60};
 const XDAN={name:'修为丹',grade:'二品',border:'white'};
 function xdanCount(){return (S&&S.xdan)?(S.xdan.n|0):0;}
 function xdanSum(){return (S&&S.xdan)?Math.max(0,Number(S.xdan.sum)||0):0;}
@@ -4393,16 +4451,21 @@ function renderBank(){
   +'</div>';
  h+='<div class="bank-card">'
   +'<div class="bank-kicker">CURRENCY · 灵石品阶</div>'
-  +'<div class="bank-title">1 亿低阶 = 1 高阶</div>';
+  +'<div class="bank-title">1 亿低阶 = 1 高阶</div>'
+   +'<div class="bank-row"><input class="bank-input" id="tierAmt" type="number" min="0" step="1" placeholder="输入数量（源品阶灵石）">'
+   +'<button class="btn small" onclick="tierMul(10)">×10</button>'
+   +'<button class="btn small" onclick="tierMul(100)">×100</button>'
+   +'<button class="btn small" onclick="tierMul(1000)">×1000</button>'
+   +'<button class="btn small" onclick="tierMul(10000)">×10000</button></div>';
  for(let i=0;i<5;i++){
   const bal=tierBal(i);
   h+='<div class="tier-row"><span class="tier-name">'+tierName(i)+'</span><span class="tier-bal">'+fmt(bal)+'</span>'
    +'<span class="tier-btns">'
-   +(i<4?'<button class="btn small" onclick="upTier('+i+')"'+(bal>=TIER_RATE?'':' disabled')+'>升品</button>':'')
-   +(i>0?'<button class="btn small" onclick="downTier('+i+')"'+((i===0?0:(S.high[i-1]||0))>=1?'':' disabled')+'>降品</button>':'')
+   +(i<4?'<button class="btn small" onclick="upTierN('+i+')"'+(bal>=TIER_RATE?'':' disabled')+'>升品</button>':'')
+   +(i>0?'<button class="btn small" onclick="downTierN('+i+')"'+((i===0?0:(S.high[i-1]||0))>=1?'':' disabled')+'>降品</button>':'')
    +'</span></div>';
  }
- h+='<div class="bank-sub" style="margin-top:8px">升品：1 亿'+tierName(0)+' → 1 '+tierName(1)+'，依次类推；降品按 1:1 亿换回。</div>'
+ h+='<div class="bank-sub" style="margin-top:8px">升品/降品数量取自上方输入框（源品阶灵石）：升品按 1:1 亿向上兑换，超出 1 亿整数倍的部分留在原品阶；降品按 1 个高阶换 1 亿低阶。</div>'
   +'</div>';
  h+='</div>';
  box.innerHTML=h;
@@ -4618,6 +4681,7 @@ const RES={
  jingdan:{name:'精英妖丹',grade:'四品',border:'deepgreen',desc:'精英妖兽的丹核，灵气充盈，坊市愿高价收。'},
  shoupi:{name:'兽皮',grade:'一品',border:'gray',desc:'妖兽的皮毛，粗糙但结实，可缝护具。'},
  lingcao:{name:'灵草',grade:'一品',border:'gray',desc:'山野间采得的灵草，可入药。'},
+ hxc:{name:'回香草',grade:'一品',border:'gray',desc:'安神丹的主药，只在幻境与位面的战利品里出现，坊市不售。'},
  yaoxue:{name:'妖血',grade:'一品',border:'gray',desc:'妖兽精血，炼体者常备之物。'}
 };
 const G9={'无级别':0,'一品':1,'二品':2,'三品':3,'四品':4,'五品':5,'六品':6,'七品':7,'八品':8,'九品':9};
@@ -4808,9 +4872,9 @@ function applyOffline(){
  const now=Date.now();
  const secs=(now-S.last)/1000;
  if(secs<30){S.last=now;return;}
- const off=Math.min(secs,12*3600);
- const xiu=ratePerSec()*off;
- const ling=lingRate()*off;
+ const off=Math.min(secs,6*3600);
+ const xiu=ratePerSec()*off*0.5;
+ const ling=lingRate()*off*0.5;
  const before=S.xiuwei;
  S.xiuwei+=xiu;S.lingshi+=ling;
  clampCap();
@@ -5119,6 +5183,10 @@ setInterval(function(){
    if(typeof B!=='undefined'&&B&&B.on&&B.p&&B.p.hp>0)B.p.hp=Math.min(B.p.hpMax,B.p.hp+amt);
   }else S.hot=null;
  }
+ if(S.mindHot){
+  if(Date.now()<S.mindHot.until)S.mind=Math.min(mindMax(),S.mind+(S.mindHot.pctps||0)*mindMax()*dt);
+  else S.mindHot=null;
+ }
  if(unstableOn())S.mind=Math.max(0,S.mind-1*dt);
  else if(S.mind<mindMax()&&!(typeof B!=='undefined'&&B&&B.on&&B.p&&B.p.hs&&B.p.hs.on))S.mind=Math.min(mindMax(),S.mind+mindRegen()*dt);
  /* 灵石银行：到点结算，若在银行页则刷新展示 */
@@ -5270,7 +5338,7 @@ function btlAcc(src,v){
  if(S&&S.stats&&v>S.stats.maxHit)S.stats.maxHit=v;
 }
 /* ---------- v3.1 便携槽位 ---------- */
-const POUCH_POOL=['','huichunsan','huichundan','xiaohuan','dahuan','juqi','zhenyuan','naling','wanfa','qingxin','xdan'];
+const POUCH_POOL=['','huichunsan','huichundan','xiaohuan','dahuan','anshen','juqi','zhenyuan','naling','wanfa','qingxin','xdan'];
 function pouch(){if(!S.pouch)S.pouch=['','',''];while(S.pouch.length<3)S.pouch.push('');return S.pouch;}
 function pouchName(k){
  if(!k)return '空';
@@ -5769,7 +5837,19 @@ function btlToSelect(){
    h+='<button class="btl-opt btl-lv'+(idx===pk?' on':'')+(lock?' lock':'')+'" '+(lock?'disabled':'onclick="btlPickPlaneLevel('+idx+')"')+'>'
     +'<b>'+lv+'</b><small>'+(lock?'锁':(planeBoss(idx)?'虫王':planeTotalShown(idx)+' 只'))+'</small></button>';
   }
-  h+='</div><div class="btl-note">difficulty：怪物 +30/档、刷新 ×1.25/档、并有战果加成；幻境与位面都按难度抬怪物数值（简单 生命 ×1 攻击 ×1 防御 ×1、困难 ×1.45/×1.7/×1.15、地狱 ×1.95/×2.7/×1.35、亚洲人 ×2.5/×4.0/×1.6）。已解锁 '+BDIF.slice(0,dm+1).map(function(d){return d.name;}).join(' / ')+'。</div><div class="btl-grid">';
+  h+='</div>';
+   {
+    const tl2=planeTierOf(pk);
+    const lvBonus=1+0.10*(tl2.lv-1);
+    if(tl2.tier>=4){
+     const bn=PLANE_BUFF.filter(function(b){return !(b.id==='worm'&&tl2.tier<8);}).map(function(b){return b.n;}).join(' / ');
+     const dn=PLANE_DEBUFF.map(function(d2){return d2.n;}).join(' / ');
+     h+='<div class="btl-note">敌方增益（铂金起 2 个 · 钻石起 3 个 · 主宰 4 个，进场随机）：'+bn+'</div>';
+     h+='<div class="btl-note">我方减益（紫金起 1 个 · 位面王者起 2 个 · 主宰 3 个，进场随机）：'+dn+'</div>';
+    }
+    h+='<div class="btl-note">数值公式：怪物生命 / 攻击 / 防御 × (1 + 10% × (本级 - 1))；本关 '+PLANE[tl2.tier].n+' 第 '+tl2.lv+' 级 = ×'+lvBonus.toFixed(2)+'（叠加计算，不叠乘）</div>';
+   }
+   h+='<div class="btl-note">difficulty：怪物 +30/档、刷新 ×1.25/档、并有战果加成；幻境与位面都按难度抬怪物数值（简单 生命 ×1 攻击 ×1 防御 ×1、困难 ×1.45/×1.7/×1.15、地狱 ×1.95/×2.7/×1.35、亚洲人 ×2.5/×4.0/×1.6）。已解锁 '+BDIF.slice(0,dm+1).map(function(d){return d.name;}).join(' / ')+'。</div><div class="btl-grid">';
   for(let i2=0;i2<BDIF.length;i2++){
    const d=BDIF[i2],lock=i2>dm;
    h+='<button class="btl-opt'+(i2===planeDif()?' on':'')+(lock?' lock':'')+'" '+(lock?'disabled':'onclick="btlPickPlaneDif('+i2+')"')+'>'
@@ -5910,13 +5990,22 @@ function planeBoss(f){
 function planeBuffs(f){
  const o=planeTierOf(f||planeFlat());
  let n=0;
- if(o.tier>=3)n=2;
+ if(o.tier>=8)n=4;
  else if(o.tier>=6)n=3;
- else if(o.tier>=8)n=4;
+ else if(o.tier>=3)n=2;
  const pool=(o.tier>=8)?PLANE_BUFF:PLANE_BUFF.filter(function(b){return b.id!=='worm';});
  const out=[];
  for(let i=0;i<n;i++)out.push(pool[Math.floor(Math.random()*pool.length)].id);
  return Array.from(new Set(out));
+}
+function planeBuffName(id){const b=PLANE_BUFF.find(function(x){return x.id===id;});return b?b.n:id;}
+function planeDebuffName(id){const d=PLANE_DEBUFF.find(function(x){return x.id===id;});return d?d.n:id;}
+function planeNameList(arr,fn){return (arr||[]).map(fn).join('、')||'无';}
+function planeFxText(){
+ if(!B.plane)return '';
+ const bs=(B.buffs||[]).length,ds=(B.debuffs||[]).length;
+ if(!bs&&!ds)return '';
+ return ' · 敌【'+planeNameList(B.buffs,planeBuffName)+'】'+(ds?(' · 我【'+planeNameList(B.debuffs,planeDebuffName)+'】'):'');
 }
 function planeDebuffs(f){
  const o=planeTierOf(f||planeFlat());
@@ -5989,6 +6078,7 @@ function btlStart(){
   B.total=50+50*B.realm+BDIF[B.dif].add;
  }
  B.lvlK=Math.max(1,planeTierOf(B.plane?B.pf:0).lv);
+ B.statK=B.plane?(1+0.10*(planeTierOf(B.pf).lv-1)):1; /* v-0.5 位面小等级加成：每级 +10%，叠加 */
  B.tot2=B.total;
  B.total=Math.round(B.total*(B.plane?(1+0.02*(planeTierOf(B.pf).lv-1)):1));
  B.eliteKilled=0;
@@ -6000,7 +6090,7 @@ function btlStart(){
  $('btlSelect').style.display='none';
  $('btlRes').classList.remove('on');
  $('btlName').textContent=B.plane?('位面模拟 · '+planeLabel(B.pf)):(REALMS[B.realm].name+'期 · 拟态幻境');
- $('btlMeta').textContent=B.plane?(BDIF[B.dif].name+' · '+REALMS[B.realm].name+'期 · 共 '+B.total+(B.boss?' 只（虫王）':' 只')):
+ $('btlMeta').textContent=B.plane?(BDIF[B.dif].name+' · '+REALMS[B.realm].name+'期 · 共 '+B.total+(B.boss?' 只（虫王）':' 只')+planeFxText()):
   (BDIF[B.dif].name+' · '+btlClassLabel()+' · 共 '+B.total+' 只');
  btlFit();
  B.last=performance.now();
@@ -6014,11 +6104,12 @@ function btlExit(){
 function btlSettle(win,quit){
  /* v3.5.0：挑战失败（含中途退出）不再发放任何奖励，只有斩妖战绩与战评记入统计 */
  const cap=capFor(S.realm,S.sub);
- /* v3.1：收益锚定「当前修为产出 90 秒」，随境界自然放大，不再受当层上限压制 */
- const xs=win?capFor(S.realm,0)*0.80*(1+0.80*B.dif):0;
+ /* v-0.5：修为奖励改为「当前大境界第一层上限的 45%，随难度每档 +5%，最高 60%」 */
+ const xs=win?capFor(S.realm,0)*(0.45+0.05*Math.min(3,B.dif|0)):0;
  const ls=win?Math.round(lingRate()*300*(1+1.2*B.dif)):0;
  const yaodan=win?Math.max(0,Math.round(B.killed/10)):0;
  const jingdan=win?(B.eliteKilled||0):0;
+ let hxcGot=0;
  if(win){
   if(!S.xdan)S.xdan={n:0,sum:0};
   S.xdan.n=(S.xdan.n|0)+1;
@@ -6044,6 +6135,9 @@ function btlSettle(win,quit){
   S.inv.yaodan=(S.inv.yaodan|0)+yaodan;
   if(jingdan)S.inv.jingdan=(S.inv.jingdan|0)+jingdan;
   if(B.killed>=20)S.inv.shoupi=(S.inv.shoupi|0)+Math.max(1,Math.round(B.killed/24));
+  const hxr=Math.random();
+  hxcGot=hxr<0.05?5:(hxr<0.40?3:1);
+  S.inv.hxc=(S.inv.hxc|0)+hxcGot;
  }
  clampCap();
  save();
@@ -6089,7 +6183,7 @@ function btlSettle(win,quit){
   }
   save(); /* v-0.4.3：升段当场落盘，不再等 5 秒自动存档 */
  }
- B.res={win:win,quit:quit,killed:B.killed,xs:xs,ls:ls,yaodan:yaodan,jingdan:jingdan,time:B.time,xd:1,
+ B.res={win:win,quit:quit,killed:B.killed,xs:xs,ls:ls,yaodan:yaodan,jingdan:jingdan,hxc:hxcGot,time:B.time,xd:1,
   plane:B.plane,grade:grade,gain:gain,noGain:noGain,planeNow:B.plane?planeLabel():''};
  updateUI();
  if(typeof renderRing==='function')renderRing();
@@ -6110,7 +6204,7 @@ function btlShowResult(){
    +'<div>斩妖 <b>'+r.killed+'</b> 只 · 用时 '+btlClock(r.time)+'</div>'
    +'<div>'+(r.noGain?'复战旧地 · 段位不变（只有挑战当前最高关才升段）':'升段 <b>+'+r.gain+'</b> · 下一场从 <b>'+planeLabel(planeFlat())+'</b> 起')+'</div>'
    +'<div>修为丹 ×1（合 <b>'+fmt(r.xs)+'</b> 修为）· 下品灵石 +'+fmt(r.ls)+'</div>'
-   +'<div>妖丹 ×'+r.yaodan+(r.jingdan?(' · 精英妖丹 ×'+r.jingdan):'')+'</div>';
+   +'<div>妖丹 ×'+r.yaodan+(r.jingdan?(' · 精英妖丹 ×'+r.jingdan):'')+(r.hxc?(' · 回香草 ×'+r.hxc):'')+'</div>';
   $('btlRes').classList.add('on');
   return;
  }
@@ -6118,7 +6212,7 @@ function btlShowResult(){
  let b='斩妖 <b>'+r.killed+'</b> 只 · 用时 '+btlClock(r.time)+'<br>';
  if(r.win){
   b+='修为丹 ×1（合 <b>'+fmt(r.xs)+'</b> 修为）· 下品灵石 +'+fmt(r.ls)+'<br>'
-   +'妖丹 ×'+r.yaodan+(r.jingdan?(' · 精英妖丹 ×'+r.jingdan):'');
+   +'妖丹 ×'+r.yaodan+(r.jingdan?(' · 精英妖丹 ×'+r.jingdan):'')+(r.hxc?(' · 回香草 ×'+r.hxc):'');
  }else{
   b+='<span style="color:#C98A7E">'+(r.quit?'中途退出，无功而返：本次不获得任何奖励。':'力战而陨，无功而返：本次不获得任何奖励。')+'</span>';
  }
@@ -6394,6 +6488,11 @@ function btlUpdate(dt){
    B.spawnT-=iv;btlSpawn();
   }
  }
+ /* v-0.5：场上妖物不足 8 只时立即补怪 */
+ if(B.alive.length<8&&B.spawned<B.total){
+  let guard2=0;
+  while(B.alive.length<8&&B.spawned<B.total&&guard2<12){guard2++;btlSpawn();}
+ }
  /* 敌人 */
  const ri=B.realm;
  const bagSlowPct=(B.bags&&B.bags.length)?baguaSpec().slowPct:0;
@@ -6527,7 +6626,7 @@ function btlUpdate(dt){
    if(Math.hypot(e.x-s.x,e.y-s.y)<e.r+6){
     hit=true;
     if(btlMiss()){
-     btlNum(s.x,s.y-10,0,false,'#B9C2D0',true);
+     btlNum(s.x,s.y-10,0,false,'#B9C2D0','未命中');
      B.fx.push({x:s.x,y:s.y,r:6,t:0.2,col:'#B9C2D0'});
      break;
     }
@@ -6595,16 +6694,17 @@ function btlSpawn(){
  const ri=B.realm;
  const A=B.p;
  const K=planeStatK();
- const hpUnit=monHpBase(ri)/0.8*K.hp;
- const dmgUnit=monAtkBase(ri)*K.atk;
- const defUnit=monRefDef(ri)*K.def;
+ const statK=B.statK||1;
+ const hpUnit=monHpBase(ri)/0.8*K.hp*statK;
+ const dmgUnit=monAtkBase(ri)*K.atk*statK;
+ const defUnit=monRefDef(ri)*K.def*statK;
  let kind;
  if(B.plane&&B.boss&&!B.bossSpawned){
   B.bossSpawned=true;
   const dd=MON.boss,cv2=$('btlCv'),W2=cv2.width,H2=cv2.height;
   B.alive.push({id:B.id++,kind:'boss',def:dd,boss:true,x:Math.round(W2/2),y:Math.round(H2*0.28),r:dd.r,
-   spd:0,cd:2,hp:monHpBase(B.realm)*dd.hp*K.hp,hpMax:monHpBase(B.realm)*dd.hp*K.hp,defv:monRefDef(B.realm)*3*K.def,
-   raw:monAtkBase(B.realm)*dd.dmg*K.atk,hitT:0,dotT:0,dotAcc:0,dotDmg:0,elite:true,spawnT:0,webT:6});
+   spd:0,cd:2,hp:monHpBase(B.realm)*dd.hp*K.hp*statK,hpMax:monHpBase(B.realm)*dd.hp*K.hp*statK,defv:monRefDef(B.realm)*3*K.def*statK,
+   raw:monAtkBase(B.realm)*dd.dmg*K.atk*statK,hitT:0,dotT:0,dotAcc:0,dotDmg:0,elite:true,spawnT:0,webT:6});
   B.spawned++;
   return;
  }
@@ -7222,7 +7322,7 @@ function renderBattleTab(){
   +'<div style="margin-top:14px"><button class="btn" onclick="event.stopPropagation();btlOpenMode(\'plane\')">进入位面</button>'
   +'<span class="btl-sub" style="margin-left:10px">当前 '+planeLabel(planePick())+' · 难度 '+BDIF[planeDif()].name+'</span></div></div>'
   +BTL_PLANET_SVG+'</div>'
-  +'<div class="desc" style="margin-top:10px">幻境战果：修为丹（每局 1 枚，其修为约合当前大境界一层上限的 80%，并随难度递增）、下品灵石与妖丹，均存于储物戒。</div>'
+  +'<div class="desc" style="margin-top:10px">幻境战果：修为丹（每局 1 枚，其修为约合当前大境界一层上限的 45%，随难度每档 +5%、最高 60%）、下品灵石与妖丹，均存于储物戒。</div>'
   +'</div>';
 }
 if(typeof renderBattleTab==='function')renderBattleTab();
@@ -7231,7 +7331,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.4.3';
+const BUILD = '0.5.1';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
