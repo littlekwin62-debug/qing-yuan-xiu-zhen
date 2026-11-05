@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>青元修真 · 测试版 v-0.5.5 · 卷开见字</title>
+<title>青元修真 · 测试版 v-0.5.6 · 去速</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{min-height:100%}
@@ -839,7 +839,7 @@ footer{color:#5E7592;letter-spacing:1px}
   <header>
     <div class="title-box">
       <h1>青元修真</h1>
-      <div class="sub">测试版 v-0.5.5 — 卷开见字</div>
+      <div class="sub">测试版 v-0.5.6 — 去速</div>
     </div>
     <div class="realm-badge">
       <div class="realm-char" id="realmChar">锻</div>
@@ -998,11 +998,7 @@ footer{color:#5E7592;letter-spacing:1px}
 
     <section class="panel control-strip">
       <div class="speed-row">
-        <button class="btn speed-btn on" data-s="1" onclick="setSpeed(1)">×1</button>
-        <button class="btn speed-btn" data-s="10" onclick="setSpeed(10)">×10</button>
-        <button class="btn speed-btn" data-s="100" onclick="setSpeed(100)">×100</button>
-        <button class="btn speed-btn" data-s="1000" onclick="setSpeed(1000)">×1000</button>
-        <span class="note">加速仅作用于本页挂机 · 离线收益上限 6 小时</span>
+        <span class="note">全程约一周 · 离线收益上限 6 小时 · 慢火细炼</span>
       </div>
       <div class="row" style="gap:8px">
         <button class="btn small" onclick="openExport()">导出/导入存档</button>
@@ -7464,7 +7460,7 @@ if(typeof renderBattleTab==='function')renderBattleTab();
 
 <script>
 /* 自动更新检测：只在 http(s) 下生效，本地双击打开时跳过。*/
-const BUILD = '0.5.5';
+const BUILD = '0.5.6';
 (function(){
   if(!/^https?:$/.test(location.protocol))return;
   let busy=false, shown=false;
